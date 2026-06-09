@@ -2,6 +2,7 @@ from fastapi import (
     APIRouter,
     Depends
 )
+import json
 
 from sqlalchemy.orm import Session
 
@@ -9,6 +10,7 @@ from app.database.dependencies import get_db
 
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
+from app.services.cache import (redis_client, CACHE_TTL)
 
 from app.services.dataset_loader import (
     load_standardized_df
@@ -20,11 +22,20 @@ router = APIRouter(
 )
 
 @router.get("/top/{upload_id}")
-def top_products(
-    upload_id: int,
-    db: Session = Depends(get_db)
-):
+def top_products(upload_id: int, db: Session = Depends(get_db)):
+    cache_key = (
+        f"products:{upload_id}"
+    )
 
+    cached = redis_client.get(
+        cache_key
+    )
+
+    if cached:
+        return json.loads(
+            cached
+        )
+    
     upload = (
         db.query(Upload)
         .filter(
@@ -61,6 +72,12 @@ def top_products(
         .reset_index()
     )
 
-    return result.to_dict(
-        orient="records"
+    result = result.to_dict(orient="records")
+
+    redis_client.setex(
+        cache_key,
+        CACHE_TTL,
+        json.dumps(result)
     )
+
+    return result

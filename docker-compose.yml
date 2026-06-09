@@ -27,6 +27,10 @@ services:
 
     depends_on:
       - postgres
+      - redis
+
+    environment:
+      REDIS_HOST: redis
 
     volumes:
       - ./backend:/app
@@ -42,6 +46,13 @@ services:
 
     depends_on:
       - backend
+  redis:
+    image: redis:7
+
+    container_name: retailiq-redis
+
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_data:

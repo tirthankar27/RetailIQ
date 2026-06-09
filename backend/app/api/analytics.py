@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 from fastapi import (
     APIRouter,
@@ -10,6 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
+from app.services.cache import redis_client
 
 from app.database.dependencies import get_db
 
@@ -24,6 +26,17 @@ router = APIRouter(
 
 @router.get("/{upload_id}")
 def analytics(upload_id: int, db: Session = Depends(get_db)):
+    cache_key = f"analytics:{upload_id}"
+
+    cached = redis_client.get(
+        cache_key
+    )
+
+    if cached:
+        return json.loads(
+            cached
+        )
+    
     upload = (
         db.query(Upload)
         .filter(
@@ -78,4 +91,12 @@ def analytics(upload_id: int, db: Session = Depends(get_db)):
         }
     )
 
-    return generate_basic_kpis(df)
+    result = generate_basic_kpis(df)
+
+    redis_client.setex(
+        cache_key,
+        3600,
+        json.dumps(result)
+    )
+
+    return result

@@ -2,6 +2,7 @@ from fastapi import (
     APIRouter,
     Depends
 )
+import json
 
 from sqlalchemy.orm import Session
 
@@ -9,6 +10,7 @@ from app.database.dependencies import get_db
 
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
+from app.services.cache import (redis_client, CACHE_TTL)
 
 from app.services.dataset_loader import (
     load_standardized_df
@@ -20,10 +22,20 @@ router = APIRouter(
 )
 
 @router.get("/{upload_id}")
-def generate_insights(
-    upload_id: int,
-    db: Session = Depends(get_db)
-):
+def generate_insights(upload_id: int, db: Session = Depends(get_db)):
+
+    cache_key = (
+        f"insights:{upload_id}"
+    )
+
+    cached = redis_client.get(
+        cache_key
+    )
+
+    if cached:
+        return json.loads(
+            cached
+        )
 
     upload = (
         db.query(Upload)
@@ -91,6 +103,12 @@ def generate_insights(
             f"Top revenue-generating product is '{top_product}'."
         )
 
-    return {
-        "insights": insights
-    }
+    result = {"insights": insights}
+
+    redis_client.setex(
+        cache_key,
+        CACHE_TTL,
+        json.dumps(result)
+    )
+
+    return result
