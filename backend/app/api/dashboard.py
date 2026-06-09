@@ -14,6 +14,7 @@ from app.database.dependencies import get_db
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
 from app.services.cache import (redis_client, CACHE_TTL)
+from app.services.metrics import (DASHBOARD_REQUESTS)
 
 from app.services.data_processor import (
     standardize_dataframe
@@ -30,6 +31,7 @@ router = APIRouter(
 
 @router.get("/{upload_id}")
 def get_dashboard(upload_id: int, db: Session = Depends(get_db)):
+    DASHBOARD_REQUESTS.inc()
     cache_key = (
         f"dashboard:{upload_id}"
     )

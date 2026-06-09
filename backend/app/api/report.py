@@ -15,6 +15,7 @@ from app.database.dependencies import get_db
 
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
+from app.services.metrics import (REPORT_DOWNLOADS)
 
 from app.services.dataset_loader import (
     load_standardized_df
@@ -150,6 +151,8 @@ def download_report(
         top_customers,
         top_products
     )
+
+    REPORT_DOWNLOADS.inc()
 
     return FileResponse(
         pdf_path,

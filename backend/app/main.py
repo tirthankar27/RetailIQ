@@ -1,4 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
+from prometheus_client import (generate_latest, CONTENT_TYPE_LATEST)
+import time
+from app.services.metrics import (REQUEST_COUNT, REQUEST_LATENCY)
+
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.upload import router as upload_router
 from app.api.analyze import router as analyze_router
@@ -16,6 +20,25 @@ from app.api.report import router as report_router
 app = FastAPI(
     title="Customer Intelligence Platform"
 )
+
+@app.middleware("http")
+async def metrics_middleware(
+    request,
+    call_next
+):
+    start = time.time()
+
+    response = await call_next(
+        request
+    )
+
+    REQUEST_COUNT.inc()
+
+    REQUEST_LATENCY.observe(
+        time.time() - start
+    )
+
+    return response
 
 app.add_middleware(
     CORSMiddleware,
@@ -87,6 +110,13 @@ app.include_router(
     report_router,
     prefix="/api"
 )
+
+@app.get("/metrics")
+def metrics():
+    return Response(
+        generate_latest(),
+        media_type=CONTENT_TYPE_LATEST
+    )
 
 @app.get("/")
 def home():

@@ -11,6 +11,7 @@ from app.models.upload import Upload
 from sqlalchemy.orm import Session
 from pathlib import Path
 from app.database.dependencies import get_db
+from app.services.metrics import (UPLOADS)
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
 
@@ -58,6 +59,7 @@ async def upload_csv(
     db.add(upload)
 
     db.commit()
+    UPLOADS.inc()
 
     db.refresh(upload)
 
