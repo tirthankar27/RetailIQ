@@ -1,3 +1,4 @@
+![CI](https://github.com/tirthankar27/RetailIQ/actions/workflows/ci.yml/badge.svg)
 # RetailIQ - Customer Intelligence Platform
 
 A full-stack customer intelligence platform that enables organizations to collect, analyze, and visualize customer data to gain actionable business insights.
