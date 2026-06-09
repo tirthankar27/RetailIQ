@@ -1,63 +1,17 @@
 # RetailIQ - Customer Intelligence Platform
 
-RetailIQ is a full-stack analytics platform that transforms raw retail transaction datasets into actionable business insights.
-
-Users can upload CSV or Excel datasets, map columns automatically, generate customer segmentation, analyze revenue trends, identify top customers and products, and export executive PDF reports.
-
----
+A full-stack customer intelligence platform that enables organizations to collect, analyze, and visualize customer data to gain actionable business insights.
 
 ## Features
 
-### Dataset Upload
-
-* Upload CSV, XLS, and XLSX files
-* Automatic file validation
-* Dataset preview before processing
-
-### Smart Column Detection
-
-* Automatic schema detection using fuzzy matching
-* Detects:
-
-  * Customer ID
-  * Transaction Date
-  * Quantity
-  * Unit Price
-  * Product
-
-### Customer Analytics
-
-* RFM-based customer segmentation
-* Champions
-* Loyal Customers
-* Potential Loyalists
-* At Risk Customers
-* Others
-
-### Business Intelligence Dashboard
-
-* Revenue KPIs
-* Order KPIs
-* Customer KPIs
-* Average Order Value
-* Revenue trend visualization
-* Customer segmentation charts
-
-### Customer Insights
-
-* Top revenue-generating customers
-* Top revenue-generating products
-* Automatically generated business insights
-
-### Executive PDF Reports
-
-* KPI summary tables
-* Revenue trend charts
-* Customer insights
-* Product performance
-* Executive-ready reporting
-
----
+* Customer data management
+* Data upload and processing
+* Interactive analytics dashboard
+* Customer segmentation
+* Trend analysis and reporting
+* Secure authentication and authorization
+* Responsive web interface
+* RESTful API backend
 
 ## Tech Stack
 
@@ -67,227 +21,128 @@ Users can upload CSV or Excel datasets, map columns automatically, generate cust
 * React
 * TypeScript
 * Tailwind CSS
-* Recharts
-* Axios
 
 ### Backend
 
-* FastAPI
-* SQLAlchemy
+* Python
+* Flask/FastAPI
 * PostgreSQL
-* Pandas
-* RapidFuzz
-* ReportLab
-* Matplotlib
 
----
+### DevOps & Deployment
+
+* Docker
+* Kubernetes
+* GitHub
 
 ## Project Structure
 
 ```text
 Customer-Intelligence-Platform/
-
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   ├── models/
-│   │   ├── schemas/
-│   │   ├── services/
-│   │   ├── database/
-│   │   └── main.py
-│   │
-│   ├── uploads/
-│   ├── reports/
-│   └── requirements.txt
-│
 ├── frontend/
 │   ├── app/
 │   ├── components/
-│   ├── lib/
-│   └── package.json
-│
+│   ├── public/
+│   └── ...
+├── backend/
+│   ├── api/
+│   ├── models/
+│   ├── services/
+│   └── ...
+├── k8s/
+│   ├── frontend-deployment.yaml
+│   ├── frontend-service.yaml
+│   └── ...
 └── README.md
 ```
 
----
-
 ## Installation
 
-### Clone Repository
+### Clone the Repository
 
 ```bash
 git clone <repository-url>
-
 cd Customer-Intelligence-Platform
 ```
 
----
-
-## Backend Setup
-
-Create virtual environment:
+### Backend Setup
 
 ```bash
+cd backend
+
 python -m venv venv
-```
 
-Activate:
+source venv/bin/activate      # macOS/Linux
+# venv\Scripts\activate       # Windows
 
-### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-### Mac/Linux
-
-```bash
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
 pip install -r requirements.txt
 ```
 
-Run FastAPI:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-Backend runs at:
-
-```text
-http://localhost:8000
-```
-
-Swagger Documentation:
-
-```text
-http://localhost:8000/docs
-```
-
----
-
-## Frontend Setup
-
-Navigate to frontend:
+### Frontend Setup
 
 ```bash
 cd frontend
-```
 
-Install packages:
-
-```bash
 npm install
 ```
 
-Run development server:
+## Running the Application
+
+### Start Backend
 
 ```bash
+cd backend
+
+python app.py
+```
+
+### Start Frontend
+
+```bash
+cd frontend
+
 npm run dev
 ```
 
-Frontend runs at:
+Frontend:
 
 ```text
 http://localhost:3000
 ```
 
----
-
-## Workflow
-
-### 1. Upload Dataset
-
-Upload retail transaction data.
-
-### 2. Review Column Mapping
-
-RetailIQ automatically detects:
-
-* Customer ID
-* Date
-* Quantity
-* Price
-* Product
-
-Users can adjust mappings manually.
-
-### 3. Generate Dashboard
-
-The platform computes:
-
-* Revenue
-* Orders
-* Customers
-* Average Order Value
-* Segments
-* Top Customers
-* Top Products
-
-### 4. Download Report
-
-Generate an executive PDF report containing:
-
-* KPI Summary
-* Revenue Trend
-* Business Insights
-* Top Customers
-* Top Products
-
----
-
-## Sample Dataset
-
-The project was tested using the UCI Online Retail Dataset.
-
-Columns:
+Backend:
 
 ```text
-InvoiceNo
-StockCode
-Description
-Quantity
-InvoiceDate
-UnitPrice
-CustomerID
-Country
+http://localhost:5000
 ```
 
----
+## Docker
+
+Build and run containers:
+
+```bash
+docker compose up --build
+```
+
+## Kubernetes
+
+Apply Kubernetes resources:
+
+```bash
+kubectl apply -f k8s/
+```
 
 ## Future Enhancements
 
-* Authentication & User Management
-* Historical Dashboard Tracking
-* Churn Prediction
-* Customer Lifetime Value Prediction
-* AI Chat Assistant for Dataset Queries
-* Multi-Dataset Comparison
-* Scheduled Report Generation
-* Cloud Deployment
+* Machine learning-based customer insights
+* Predictive analytics
+* Real-time data streaming
+* Advanced reporting and exports
+* Role-based access control
 
----
+## Contributors
 
-## Screenshots
+* Tirthankar Ghosh
 
-Add screenshots of:
+## License
 
-* Upload Page
-* Mapping Page
-* Analytics Dashboard
-* PDF Report
-
----
-
-## Author
-
-Tirthankar Ghosh
-
-B.Tech, National Institute of Technology Sikkim
-
-Customer Intelligence Platform built using FastAPI, PostgreSQL, Next.js, and Tailwind CSS.
+This project is intended for educational and development purposes.
