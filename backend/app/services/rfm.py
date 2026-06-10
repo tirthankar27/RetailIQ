@@ -11,27 +11,72 @@ def generate_rfm(df):
     rfm = (
         df.groupby("CustomerID")
         .agg(
-            {
-                "InvoiceDate":
-                    lambda x:
-                    (
-                        snapshot_date
-                        - x.max()
-                    ).days,
+            Recency=(
+                "InvoiceDate",
+                lambda x: (
+                    snapshot_date
+                    - x.max()
+                ).days
+            ),
 
-                "CustomerID":
-                    "count",
+            Frequency=(
+                "InvoiceDate",
+                "count"
+            ),
 
-                "Revenue":
-                    "sum"
-            }
+            Monetary=(
+                "Revenue",
+                "sum"
+            ),
+
+            TotalQuantity=(
+                "Quantity",
+                "sum"
+            ),
+
+            FirstPurchase=(
+                "InvoiceDate",
+                "min"
+            ),
+
+            LastPurchase=(
+                "InvoiceDate",
+                "max"
+            )
         )
     )
 
-    rfm.columns = [
-        "Recency",
-        "Frequency",
-        "Monetary"
-    ]
+    rfm["CustomerLifetime"] = (
+        rfm["LastPurchase"]
+        - rfm["FirstPurchase"]
+    ).dt.days + 1
+
+    rfm["AverageOrderValue"] = (
+        rfm["Monetary"]
+        / rfm["Frequency"]
+    )
+
+    rfm["AvgDaysBetweenPurchases"] = (
+        rfm["CustomerLifetime"]
+        / rfm["Frequency"]
+    )
+
+    unique_products = (
+        df.groupby("CustomerID")
+        ["Product"]
+        .nunique()
+    )
+
+    rfm["UniqueProducts"] = (
+        unique_products
+    )
+
+    rfm.drop(
+        columns=[
+            "FirstPurchase",
+            "LastPurchase"
+        ],
+        inplace=True
+    )
 
     return rfm

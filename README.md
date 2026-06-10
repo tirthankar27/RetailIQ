@@ -1,18 +1,80 @@
 ![CI](https://github.com/tirthankar27/RetailIQ/actions/workflows/ci.yml/badge.svg)
-# RetailIQ - Customer Intelligence Platform
 
-A full-stack customer intelligence platform that enables organizations to collect, analyze, and visualize customer data to gain actionable business insights.
+# RetailIQ – AI-Powered Customer Intelligence Platform
 
-## Features
+RetailIQ is a full-stack analytics platform that transforms raw retail transaction data into actionable business intelligence. It provides customer segmentation, churn prediction, revenue analytics, PDF reporting, monitoring, caching, and cloud-native deployment capabilities.
 
-* Customer data management
-* Data upload and processing
-* Interactive analytics dashboard
-* Customer segmentation
-* Trend analysis and reporting
-* Secure authentication and authorization
-* Responsive web interface
-* RESTful API backend
+---
+
+## Key Features
+
+### Analytics & Business Intelligence
+
+* KPI Dashboard (Revenue, Orders, Customers, AOV)
+* Revenue Trend Analysis
+* Top Customers & Products Analysis
+* AI-Generated Business Insights
+* Interactive Data Visualization
+
+### Customer Intelligence
+
+* Automated RFM Segmentation
+* Customer Churn Prediction using Logistic Regression
+* High-Risk Customer Identification
+* Customer Risk Distribution Analysis
+
+### Data Processing
+
+* Dataset Upload & Validation
+* Dynamic Column Mapping
+* CSV & Excel Support
+* Automated Data Standardization
+
+### Reporting
+
+* Executive PDF Report Generation
+* KPI Summary
+* Revenue Trend Charts
+* Top Customers & Products
+* Churn Risk Analysis
+
+### DevOps & Scalability
+
+* Redis Caching
+* Docker Containerization
+* Kubernetes Deployment
+* GitHub Actions CI/CD
+* Prometheus Monitoring
+* Grafana Dashboards
+
+---
+
+## Architecture
+
+```text
+                 +------------------+
+                 |     Grafana      |
+                 +--------+---------+
+                          |
+                 +--------v---------+
+                 |   Prometheus     |
+                 +--------+---------+
+                          |
+                          v
+
++------------+    +--------------+    +------------+
+|  Next.js   | -> |   FastAPI    | -> |   Redis    |
++------------+    +------+-------+    +------------+
+                         |
+                         v
+                  +-------------+
+                  | PostgreSQL  |
+                  +-------------+
+
+Docker • Kubernetes • GitHub Actions
+```
+
+---
 
 ## Tech Stack
 
@@ -25,125 +87,165 @@ A full-stack customer intelligence platform that enables organizations to collec
 
 ### Backend
 
-* Python
-* Flask/FastAPI
-* PostgreSQL
+* FastAPI
+* Pandas
+* Scikit-Learn
+* SQLAlchemy
 
-### DevOps & Deployment
+### Database & Cache
+
+* PostgreSQL
+* Redis
+
+### Machine Learning
+
+* Logistic Regression
+* Customer Churn Prediction
+* RFM Analysis
+
+### DevOps
 
 * Docker
 * Kubernetes
-* GitHub
+* GitHub Actions
+* Prometheus
+* Grafana
 
-## Project Structure
+---
 
-```text
-Customer-Intelligence-Platform/
-├── frontend/
-│   ├── app/
-│   ├── components/
-│   ├── public/
-│   └── ...
-├── backend/
-│   ├── api/
-│   ├── models/
-│   ├── services/
-│   └── ...
-├── k8s/
-│   ├── frontend-deployment.yaml
-│   ├── frontend-service.yaml
-│   └── ...
-└── README.md
-```
+## Screenshots
 
-## Installation
+### Dashboard Overview
 
-### Clone the Repository
+![Dashboard](screenshots/dashboard.png)
 
-```bash
-git clone <repository-url>
-cd Customer-Intelligence-Platform
-```
+### Dataset Upload
 
-### Backend Setup
+![Upload](screenshots/upload.png)
 
-```bash
-cd backend
+### Column Mapping
 
-python -m venv venv
+![Mapping](screenshots/mapping.png)
 
-source venv/bin/activate      # macOS/Linux
-# venv\Scripts\activate       # Windows
+### Revenue Analytics
 
-pip install -r requirements.txt
-```
+![Revenue Analytics](screenshots/revenue_trend.png)
 
-### Frontend Setup
+### Customer & Product Analytics
 
-```bash
-cd frontend
+![Customer Product Analytics](screenshots/customer_product.png)
 
-npm install
-```
+### AI Business Insights
 
-## Running the Application
+![AI Insights](screenshots/ai_insight.png)
 
-### Start Backend
+### Customer Churn Prediction
+
+![Churn Prediction](screenshots/churn.png)
+
+### Grafana Monitoring
+
+![Grafana](screenshots/grafana.png)
+
+### Prometheus Metrics
+
+![Prometheus](screenshots/prometheus.png)
+
+---
+
+## Local Development
+
+### Clone Repository
 
 ```bash
-cd backend
-
-python app.py
+git clone https://github.com/tirthankar27/RetailIQ.git
+cd RetailIQ
 ```
 
-### Start Frontend
-
-```bash
-cd frontend
-
-npm run dev
-```
-
-Frontend:
-
-```text
-http://localhost:3000
-```
-
-Backend:
-
-```text
-http://localhost:5000
-```
-
-## Docker
-
-Build and run containers:
+### Run with Docker
 
 ```bash
 docker compose up --build
 ```
 
-## Kubernetes
+Application URLs:
 
-Apply Kubernetes resources:
+```text
+Frontend   : http://localhost:3000
+Backend    : http://localhost:8000
+Prometheus : http://localhost:9090
+Grafana    : http://localhost:3001
+```
+
+---
+
+## Kubernetes Deployment
 
 ```bash
 kubectl apply -f k8s/
 ```
 
-## Future Enhancements
+Verify resources:
 
-* Machine learning-based customer insights
-* Predictive analytics
-* Real-time data streaming
-* Advanced reporting and exports
-* Role-based access control
+```bash
+kubectl get pods
+kubectl get services
+```
 
-## Contributors
+---
 
-* Tirthankar Ghosh
+## Monitoring
+
+### Prometheus
+
+Collects:
+
+* API Request Count
+* Request Latency
+* Dashboard Requests
+* Report Downloads
+* Dataset Uploads
+
+### Grafana
+
+Visualizes:
+
+* API Traffic
+* Usage Metrics
+* Business KPIs
+* Application Health
+
+---
+
+## Machine Learning Pipeline
+
+1. Upload retail transaction dataset
+2. Generate RFM metrics
+3. Engineer customer features
+4. Run Logistic Regression model
+5. Predict churn probability
+6. Identify high-risk customers
+7. Display insights through dashboard and reports
+
+---
+
+## CI/CD
+
+GitHub Actions automatically:
+
+* Installs dependencies
+* Runs backend checks
+* Builds application
+* Validates deployment workflow
+
+---
+
+## Author
+
+**Tirthankar Ghosh**
+
+---
 
 ## License
 
-This project is intended for educational and development purposes.
+This project is intended for educational and portfolio purposes.

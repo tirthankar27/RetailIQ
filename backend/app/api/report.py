@@ -2,6 +2,7 @@ from fastapi import (
     APIRouter,
     Depends
 )
+import pandas as pd
 
 from fastapi.responses import (
     FileResponse
@@ -16,6 +17,17 @@ from app.database.dependencies import get_db
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
 from app.services.metrics import (REPORT_DOWNLOADS)
+from app.services.rfm import (
+    generate_rfm
+)
+
+from app.services.revenue import (
+    revenue_trend
+)
+
+from app.services.churn import (
+    predict_churn
+)
 
 from app.services.dataset_loader import (
     load_standardized_df
@@ -58,6 +70,18 @@ def download_report(
         mapping
     )
 
+    rfm = generate_rfm(
+        df
+    )
+
+    prediction = predict_churn(
+        rfm
+    )
+
+    high_risk_customers = (
+        prediction["high_risk_customers"]
+    )
+
     dashboard = {
         "kpis": {
             "revenue": float(
@@ -87,6 +111,13 @@ def download_report(
 
     insights.append(
         f"The business served {dashboard['kpis']['customers']} unique customers."
+    )
+    insights.append(
+        f"Predicted churn rate is {prediction['churn_rate']}%."
+    )
+
+    insights.append(
+        f"{prediction['predicted_churners']} customers are predicted to churn."
     )
 
     top_customer = (
@@ -133,15 +164,28 @@ def download_report(
         .reset_index()
     )
 
-    top_products = (
-        df.groupby("Product")
-        ["Revenue"]
-        .sum()
-        .sort_values(
-            ascending=False
+    if "Product" in df.columns:
+        top_products = (
+            df.groupby("Product")
+            ["Revenue"]
+            .sum()
+            .sort_values(
+                ascending=False
+            )
+            .head(10)
+            .reset_index()
         )
-        .head(10)
-        .reset_index()
+
+    else:
+        top_products = pd.DataFrame(
+            columns=[
+                "Product",
+                "Revenue"
+            ]
+        )
+
+    revenue_data = revenue_trend(
+        df
     )
 
     generate_report(
@@ -149,7 +193,9 @@ def download_report(
         dashboard,
         insights,
         top_customers,
-        top_products
+        top_products,
+        high_risk_customers,
+        revenue_data
     )
 
     REPORT_DOWNLOADS.inc()

@@ -13,43 +13,48 @@ from app.database.dependencies import get_db
 
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
-from app.services.cache import (redis_client, CACHE_TTL)
-from app.services.metrics import (DASHBOARD_REQUESTS)
-from app.services.rfm import generate_rfm
 
-from app.services.churn import (
-    predict_churn
-)
+from app.services.cache import (redis_client, CACHE_TTL)
 
 from app.services.data_processor import (
     standardize_dataframe
 )
 
-from app.services.dashboard import (
-    generate_dashboard
+from app.services.rfm import (
+    generate_rfm
+)
+
+from app.services.churn import (
+    predict_churn
 )
 
 router = APIRouter(
-    prefix="/dashboard",
-    tags=["Dashboard"]
+    prefix="/predict",
+    tags=["Prediction"]
 )
 
 @router.get("/{upload_id}")
-def get_dashboard(upload_id: int, db: Session = Depends(get_db)):
-    DASHBOARD_REQUESTS.inc()
+def get_prediction(
+    upload_id: int,
+    db: Session = Depends(get_db)
+):
+
     cache_key = (
-        f"dashboard:{upload_id}"
+        f"prediction:{upload_id}"
     )
 
-    cached = redis_client.get(
-        cache_key
+    cached = (
+        redis_client.get(
+            cache_key
+        )
     )
 
     if cached:
+
         return json.loads(
             cached
         )
-    
+
     upload = (
         db.query(Upload)
         .filter(
@@ -63,7 +68,7 @@ def get_dashboard(upload_id: int, db: Session = Depends(get_db)):
             404,
             "Upload not found"
         )
-    
+
     mapping = (
         db.query(ColumnMapping)
         .filter(
@@ -78,7 +83,7 @@ def get_dashboard(upload_id: int, db: Session = Depends(get_db)):
             404,
             "Mapping not found"
         )
-    
+
     if upload.file_path.endswith(".csv"):
         df = pd.read_csv(
             upload.file_path
@@ -87,28 +92,18 @@ def get_dashboard(upload_id: int, db: Session = Depends(get_db)):
         df = pd.read_excel(
             upload.file_path
         )
-    
+
     df = standardize_dataframe(
         df,
         mapping
     )
 
-    result = generate_dashboard(df)
-    
     rfm = generate_rfm(
         df
     )
 
-    prediction = predict_churn(
+    result = predict_churn(
         rfm
-    )
-
-    result["predicted_churners"] = (
-        prediction["predicted_churners"]
-    )
-
-    result["churn_rate"] = (
-        prediction["churn_rate"]
     )
 
     redis_client.setex(

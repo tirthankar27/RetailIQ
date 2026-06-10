@@ -11,6 +11,13 @@ from app.database.dependencies import get_db
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
 from app.services.cache import (redis_client, CACHE_TTL)
+from app.services.rfm import (
+    generate_rfm
+)
+
+from app.services.churn import (
+    predict_churn
+)
 
 from app.services.dataset_loader import (
     load_standardized_df
@@ -102,6 +109,22 @@ def generate_insights(upload_id: int, db: Session = Depends(get_db)):
         insights.append(
             f"Top revenue-generating product is '{top_product}'."
         )
+    
+    rfm = generate_rfm(
+        df
+    )
+
+    prediction = predict_churn(
+        rfm
+    )
+
+    insights.append(
+        f"Predicted churn rate is {prediction['churn_rate']}%."
+    )
+
+    insights.append(
+        f"{prediction['predicted_churners']} customers are at risk of churn."
+    )
 
     result = {"insights": insights}
 

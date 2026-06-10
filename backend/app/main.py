@@ -16,6 +16,7 @@ from app.api.customer import router as customer_router
 from app.api.product import router as product_router
 from app.api.insights import router as insights_router
 from app.api.report import router as report_router
+from app.api.predict import router as predict_router
 
 app = FastAPI(
     title="Customer Intelligence Platform"
@@ -108,6 +109,11 @@ app.include_router(
 
 app.include_router(
     report_router,
+    prefix="/api"
+)
+
+app.include_router(
+    predict_router,
     prefix="/api"
 )
 

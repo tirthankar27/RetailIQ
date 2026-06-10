@@ -21,7 +21,9 @@ def generate_report(
     dashboard,
     insights,
     top_customers,
-    top_products
+    top_products,
+    high_risk_customers,
+    revenue_data
 ):
 
     doc = SimpleDocTemplate(
@@ -311,22 +313,89 @@ def generate_report(
         )
     )
 
+    content.append(
+        Spacer(
+            1,
+            20
+        )
+    )
+
+    content.append(
+        Paragraph(
+            "Top Customers Likely To Churn",
+            styles["Heading2"]
+        )
+    )
+
+    churn_data = [
+        [
+            "Customer ID",
+            "Churn Probability (%)"
+        ]
+    ]
+
+    for customer in high_risk_customers:
+
+        churn_data.append(
+            [
+                str(
+                    customer["customer_id"]
+                ),
+
+                f"{customer['churn_probability']}%"
+            ]
+        )
+
+    churn_table = Table(
+        churn_data,
+        colWidths=[220, 220]
+    )
+
+    churn_table.setStyle(
+        TableStyle([
+            (
+                "BACKGROUND",
+                (0,0),
+                (-1,0),
+                colors.HexColor(
+                    "#FEE2E2"
+                )
+            ),
+            (
+                "GRID",
+                (0,0),
+                (-1,-1),
+                1,
+                colors.grey
+            ),
+            (
+                "FONTNAME",
+                (0,0),
+                (-1,0),
+                "Helvetica-Bold"
+            )
+        ])
+    )
+
+    content.append(
+        churn_table
+    )
+
+    content.append(
+        Spacer(
+            1,
+            20
+        )
+    )
+
     months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun"
+        row["Month"]
+        for row in revenue_data
     ]
 
     revenues = [
-        100,
-        150,
-        120,
-        180,
-        220,
-        260
+        row["Revenue"]
+        for row in revenue_data
     ]
 
     plt.figure(
@@ -336,17 +405,30 @@ def generate_report(
     plt.plot(
         months,
         revenues,
-        linewidth=3
+        linewidth=3,
+        marker="o"
     )
 
     plt.title(
         "Revenue Trend"
     )
 
+    plt.xticks(
+        rotation=45,
+        ha="right"
+    )
+
+    plt.grid(
+        alpha=0.3
+    )
+
     plt.tight_layout()
 
     chart_path = (
-        "reports/chart.png"
+        filepath.replace(
+            ".pdf",
+            "_chart.png"
+        )
     )
 
     plt.savefig(
