@@ -1,0 +1,21 @@
+---
+- name: Build and Start Docker Services
+  command: docker compose up -d --build
+  args:
+    chdir: "{{ playbook_dir }}/.."
+
+- name: Wait for Backend Container
+  command: docker ps --filter "name=retailiq-backend" --format "{{'{{'}}.Names{{'}}'}}"
+  register: backend_container
+  retries: 10
+  delay: 3
+  until: backend_container.stdout != ""
+  changed_when: false
+
+- name: Show Running Containers
+  command: docker ps
+  register: docker_ps
+  changed_when: false
+
+- debug:
+    var: docker_ps.stdout_lines

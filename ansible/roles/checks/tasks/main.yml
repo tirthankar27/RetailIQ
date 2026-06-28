@@ -1,0 +1,58 @@
+---
+- name: Check Terraform
+  command: terraform version
+  register: terraform_version
+  changed_when: false
+
+- debug:
+    var: terraform_version.stdout_lines
+
+- name: Check Docker
+  command: docker --version
+  register: docker_version
+  changed_when: false
+
+- debug:
+    var: docker_version.stdout_lines
+
+- name: Check Docker Compose
+  command: docker compose version
+  register: compose_version
+  changed_when: false
+
+- debug:
+    var: compose_version.stdout_lines
+
+- name: Check kubectl
+  command: kubectl version --client
+  register: kubectl_version
+  changed_when: false
+
+- debug:
+    var: kubectl_version.stdout_lines
+
+- name: Check Minikube Status
+  command: minikube status
+  register: minikube_status
+  changed_when: false
+  failed_when: false
+
+- name: Show Minikube Status
+  debug:
+    var: minikube_status.stdout_lines
+
+- name: Start Minikube if stopped
+  command: minikube start
+  when: minikube_status.rc != 0
+
+- name: Verify Minikube is Running
+  command: kubectl cluster-info
+  register: cluster_info
+  changed_when: false
+
+- name: Show Cluster Info
+  debug:
+    var: cluster_info.stdout_lines
+
+- debug:
+    var: minikube_status.stdout_lines
