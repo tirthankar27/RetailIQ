@@ -2,170 +2,238 @@
 
 # RetailIQ – AI-Powered Customer Intelligence Platform
 
-RetailIQ is a full-stack analytics platform that transforms raw retail transaction data into actionable business intelligence. It provides customer segmentation, churn prediction, revenue analytics, PDF reporting, monitoring, caching, and cloud-native deployment capabilities.
+RetailIQ is a production-inspired full-stack retail analytics platform that transforms raw retail transaction data into actionable business intelligence. It combines customer analytics, machine learning, cloud-native deployment, infrastructure automation, monitoring, and reporting into a single end-to-end application.
 
 ---
 
-## Key Features
+# Features
 
-### Analytics & Business Intelligence
+## Business Analytics
 
 * KPI Dashboard (Revenue, Orders, Customers, AOV)
 * Revenue Trend Analysis
-* Top Customers & Products Analysis
-* AI-Generated Business Insights
-* Interactive Data Visualization
-
-### Customer Intelligence
-
-* Automated RFM Segmentation
-* Customer Churn Prediction using Logistic Regression
-* High-Risk Customer Identification
-* Customer Risk Distribution Analysis
-
-### Data Processing
-
-* Dataset Upload & Validation
-* Dynamic Column Mapping
-* CSV & Excel Support
-* Automated Data Standardization
-
-### Reporting
-
-* Executive PDF Report Generation
-* KPI Summary
-* Revenue Trend Charts
 * Top Customers & Products
-* Churn Risk Analysis
+* Interactive Data Visualizations
+* AI-Generated Business Insights
 
-### DevOps & Scalability
+## Customer Intelligence
 
-* Redis Caching
+* RFM Customer Segmentation
+* Logistic Regression Churn Prediction
+* Churn Probability & Risk Scoring
+* High-Risk Customer Identification
+
+## Data Processing
+
+* CSV & Excel Upload
+* Dynamic Column Mapping
+* Automated Data Validation
+* Data Standardization Pipeline
+
+## Reporting
+
+* Executive PDF Report
+* Revenue Trend Charts
+* KPI Summary
+* Customer & Product Analytics
+* Top 10 At-Risk Customers
+* Churn Analysis
+
+## DevOps & Infrastructure
+
 * Docker Containerization
-* Kubernetes Deployment
-* GitHub Actions CI/CD
+* Kubernetes Orchestration
+* Terraform Infrastructure Provisioning
+* Ansible Deployment Automation
+* GitHub Actions CI Pipeline
+* Redis Caching
 * Prometheus Monitoring
 * Grafana Dashboards
 
 ---
 
-## Architecture
+# Architecture
 
 ```text
-                 +------------------+
-                 |     Grafana      |
-                 +--------+---------+
-                          |
-                 +--------v---------+
-                 |   Prometheus     |
-                 +--------+---------+
-                          |
-                          v
-
-+------------+    +--------------+    +------------+
-|  Next.js   | -> |   FastAPI    | -> |   Redis    |
-+------------+    +------+-------+    +------------+
-                         |
-                         v
-                  +-------------+
-                  | PostgreSQL  |
-                  +-------------+
-
-Docker • Kubernetes • GitHub Actions
+                           GitHub
+                              │
+                              ▼
+                     GitHub Actions (CI)
+                              │
+                              ▼
+                      Docker Images Build
+                              │
+               ┌──────────────┴──────────────┐
+               ▼                             ▼
+          Terraform                    Ansible
+   (Network & Volumes)         (Deployment Automation)
+               │                             │
+               └──────────────┬──────────────┘
+                              ▼
+                       Docker Compose
+                              │
+                              ▼
+                         Minikube Cluster
+                              │
+                              ▼
+                        Kubernetes Pods
+                              │
+     ┌───────────────┬────────┴─────────┬──────────────┐
+     ▼               ▼                  ▼              ▼
+  Next.js        FastAPI             PostgreSQL      Redis
+                      │
+                      ▼
+           Prometheus (/metrics)
+                      │
+                      ▼
+                 Grafana Dashboard
 ```
 
 ---
 
-## Tech Stack
+# Technology Stack
 
-### Frontend
+## Frontend
 
 * Next.js
 * React
 * TypeScript
 * Tailwind CSS
 
-### Backend
+## Backend
 
 * FastAPI
-* Pandas
-* Scikit-Learn
 * SQLAlchemy
+* Pandas
+* Scikit-learn
 
-### Database & Cache
+## Database
 
 * PostgreSQL
 * Redis
 
-### Machine Learning
+## Machine Learning
 
 * Logistic Regression
-* Customer Churn Prediction
 * RFM Analysis
+* Feature Engineering
+* Churn Prediction
 
-### DevOps
+## DevOps
 
 * Docker
 * Kubernetes
+* Terraform
+* Ansible
 * GitHub Actions
 * Prometheus
 * Grafana
 
 ---
 
-## Screenshots
+# Screenshots
 
-### Dashboard Overview
+## Dashboard Overview
 
 ![Dashboard](screenshots/dashboard.png)
 
-### Dataset Upload
+## Dataset Upload
 
 ![Upload](screenshots/upload.png)
 
-### Column Mapping
+## Column Mapping
 
 ![Mapping](screenshots/mapping.png)
 
-### Revenue Analytics
+## Revenue Analytics
 
-![Revenue Analytics](screenshots/revenue_trend.png)
+![Revenue](screenshots/revenue_trend.png)
 
-### Customer & Product Analytics
+## Customer & Product Analytics
 
-![Customer Product Analytics](screenshots/customer_product.png)
+![Analytics](screenshots/customer_product.png)
 
-### AI Business Insights
+## AI Business Insights
 
-![AI Insights](screenshots/ai_insight.png)
+![Insights](screenshots/ai_insight.png)
 
-### Customer Churn Prediction
+## Customer Churn Prediction
 
-![Churn Prediction](screenshots/churn.png)
+![Churn](screenshots/churn.png)
 
-### Grafana Monitoring
+## Grafana Monitoring
 
 ![Grafana](screenshots/grafana.png)
 
-### Prometheus Metrics
+## Prometheus Metrics
 
 ![Prometheus](screenshots/prometheus.png)
 
 ---
 
-## Local Development
+# Deployment Workflow
 
-### Clone Repository
+RetailIQ follows a production-inspired deployment pipeline.
+
+```text
+Developer
+    │
+    ▼
+Git Push
+    │
+    ▼
+GitHub Actions
+    │
+    ▼
+Docker Image Build
+    │
+    ▼
+Terraform
+(Network & Volumes)
+    │
+    ▼
+Ansible Playbook
+    │
+    ▼
+Docker Compose
+    │
+    ▼
+Kubernetes Deployment
+    │
+    ▼
+Health Checks
+    │
+    ▼
+Application Available
+```
+
+The Ansible playbook automates:
+
+* Environment validation
+* Terraform infrastructure provisioning
+* Docker Compose deployment
+* Minikube startup
+* Kubernetes deployment
+* Rollout verification
+* Service health checks
+
+---
+
+# Local Development
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/tirthankar27/RetailIQ.git
 cd RetailIQ
 ```
 
-### Run with Docker
+Deploy the complete stack:
 
 ```bash
-docker compose up --build
+cd ansible
+
+ansible-playbook -i inventory.ini playbook.yml
 ```
 
 Application URLs:
@@ -177,28 +245,19 @@ Prometheus : http://localhost:9090
 Grafana    : http://localhost:3001
 ```
 
----
-
-## Kubernetes Deployment
+Stop the application:
 
 ```bash
-kubectl apply -f k8s/
-```
+docker compose down
 
-Verify resources:
-
-```bash
-kubectl get pods
-kubectl get services
+minikube stop
 ```
 
 ---
 
-## Monitoring
+# Monitoring
 
-### Prometheus
-
-Collects:
+Prometheus collects:
 
 * API Request Count
 * Request Latency
@@ -206,46 +265,48 @@ Collects:
 * Report Downloads
 * Dataset Uploads
 
-### Grafana
+Grafana visualizes:
 
-Visualizes:
-
-* API Traffic
-* Usage Metrics
+* Request Traffic
+* API Performance
 * Business KPIs
 * Application Health
 
 ---
 
-## Machine Learning Pipeline
+# Machine Learning Pipeline
 
 1. Upload retail transaction dataset
-2. Generate RFM metrics
-3. Engineer customer features
-4. Run Logistic Regression model
-5. Predict churn probability
-6. Identify high-risk customers
-7. Display insights through dashboard and reports
+2. Standardize dataset
+3. Generate RFM metrics
+4. Engineer customer features
+5. Train Logistic Regression model
+6. Predict churn probability
+7. Rank high-risk customers
+8. Display insights in dashboard and PDF reports
 
 ---
 
-## CI/CD
+# Project Highlights
 
-GitHub Actions automatically:
-
-* Installs dependencies
-* Runs backend checks
-* Builds application
-* Validates deployment workflow
+* 12+ FastAPI REST APIs
+* 541K+ Retail Transactions Processed
+* 4.3K+ Customers Analyzed
+* 70% Churn Prediction Accuracy
+* Automated Deployment using Terraform & Ansible
+* Kubernetes-Orchestrated Microservices
+* Infrastructure as Code
+* CI Pipeline with GitHub Actions
+* Monitoring using Prometheus & Grafana
 
 ---
 
-## Author
+# Author
 
 **Tirthankar Ghosh**
 
 ---
 
-## License
+# License
 
 This project is intended for educational and portfolio purposes.
