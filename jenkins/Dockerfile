@@ -46,4 +46,4 @@ RUN apt-get update && apt-get install -y \
     kubectl \
     ansible
 
-USER jenkins
+USER root
