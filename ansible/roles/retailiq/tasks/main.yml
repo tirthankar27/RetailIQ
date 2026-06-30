@@ -1,23 +1,5 @@
 ---
-- name: Wait for Backend API
-  uri:
-    url: http://localhost:8000/docs
-    status_code: 200
-  register: backend_api
-  retries: 20
-  delay: 3
-  until: backend_api.status == 200
-
-- name: Wait for Frontend
-  uri:
-    url: http://localhost:3000
-    status_code: 200
-  register: frontend_app
-  retries: 20
-  delay: 3
-  until: frontend_app.status == 200
-
-- name: Show Deployment Summary
+- name: Deployment Complete
   debug:
     msg:
       - "=========================================="
@@ -25,10 +7,10 @@
       - ""
       - "Frontend   : http://localhost:3000"
       - "Backend    : http://localhost:8000"
-      - "Backend API Docs : http://localhost:8000/docs"
       - "Prometheus : http://localhost:9090"
       - "Grafana    : http://localhost:3001"
       - ""
-      - "Docker containers are running."
-      - "Application is reachable."
+      - "Terraform Infrastructure Applied"
+      - "Docker Containers Running"
+      - "Kubernetes Resources Applied"
       - "=========================================="

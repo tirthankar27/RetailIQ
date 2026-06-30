@@ -13,7 +13,3 @@ output "redis_volume" {
 output "grafana_volume" {
   value = docker_volume.grafana_data.name
 }
-
-output "jenkins_volume" {
-  value = docker_volume.jenkins_data.name
-}
