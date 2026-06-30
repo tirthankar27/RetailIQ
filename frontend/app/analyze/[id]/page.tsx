@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 interface MappingSuggestion {
   customer: string;
@@ -30,10 +30,6 @@ export default function AnalyzePage() {
     product_column: "",
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   async function fetchData() {
     try {
       const response = await api.get(`/analyze/${params.id}`);
@@ -57,6 +53,10 @@ export default function AnalyzePage() {
       console.error(error);
     }
   }
+
+  useEffect(() => {
+    void fetchData();
+  }, []);
 
   async function saveMapping() {
     try {
