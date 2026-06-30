@@ -30,7 +30,11 @@ export default function AnalyzePage() {
     product_column: "",
   });
 
-  const fetchData = useCallback(async () => {
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
     try {
       const response = await api.get(`/analyze/${params.id}`);
 
@@ -40,15 +44,19 @@ export default function AnalyzePage() {
 
       setMapping({
         customer_column: suggested.customer || "",
+
         date_column: suggested.date || "",
+
         quantity_column: suggested.quantity || "",
+
         price_column: suggested.price || "",
+
         product_column: suggested.product || "",
       });
     } catch (error) {
       console.error(error);
     }
-  }, [params.id]);
+  }
 
   async function saveMapping() {
     try {
@@ -60,10 +68,6 @@ export default function AnalyzePage() {
       alert("Failed to save mapping");
     }
   }
-
-  useEffect(() => {
-    void fetchData();
-  }, []);
 
   if (!data) {
     return (
