@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y \
     lsb-release
 
 # Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
-    apt-get install -y nodejs
+RUN apt-get update && \
+    apt-get install -y nodejs npm
 
 # ---------------- Docker CLI ----------------
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | \
