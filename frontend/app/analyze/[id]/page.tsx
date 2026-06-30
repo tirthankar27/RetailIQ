@@ -3,12 +3,24 @@
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+interface MappingSuggestion {
+  customer: string;
+  date: string;
+  quantity: string;
+  price: string;
+  product: string;
+}
 
+interface AnalyzeResponse {
+  columns: string[];
+  preview: Record<string, unknown>[];
+  suggested_mapping: MappingSuggestion;
+}
 export default function AnalyzePage() {
   const params = useParams();
   const router = useRouter();
 
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<AnalyzeResponse | null>(null);
 
   const [mapping, setMapping] = useState({
     customer_column: "",
@@ -19,32 +31,28 @@ export default function AnalyzePage() {
   });
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await api.get(`/analyze/${params.id}`);
 
-  async function fetchData() {
-    try {
-      const response = await api.get(`/analyze/${params.id}`);
+        setData(response.data);
 
-      setData(response.data);
+        const suggested = response.data.suggested_mapping;
 
-      const suggested = response.data.suggested_mapping;
+        setMapping({
+          customer_column: suggested.customer || "",
+          date_column: suggested.date || "",
+          quantity_column: suggested.quantity || "",
+          price_column: suggested.price || "",
+          product_column: suggested.product || "",
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-      setMapping({
-        customer_column: suggested.customer || "",
-
-        date_column: suggested.date || "",
-
-        quantity_column: suggested.quantity || "",
-
-        price_column: suggested.price || "",
-
-        product_column: suggested.product || "",
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+    void fetchData();
+  }, [params.id]);
 
   async function saveMapping() {
     try {
@@ -251,7 +259,7 @@ export default function AnalyzePage() {
                 </thead>
 
                 <tbody>
-                  {data.preview.map((row: any, index: number) => (
+                  {data.preview.map((row: Record<string, unknown>, index: number) => (
                     <tr key={index} className="hover:bg-slate-50">
                       {data.columns.map((column: string) => (
                         <td

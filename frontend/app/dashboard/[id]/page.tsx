@@ -12,53 +12,105 @@ import TopProducts from "@/components/dashboard/TopProducts";
 import Insights from "@/components/dashboard/Insights";
 import ChurnChart from "@/components/dashboard/ChurnChart";
 
+type HighRiskCustomer = {
+  customer_id: number;
+  churn_probability: number;
+};
+
+type Prediction = {
+  total_customers: number;
+  predicted_churners: number;
+  predicted_active: number;
+  churn_rate: number;
+  high_risk_customers: HighRiskCustomer[];
+};
+
+type Dashboard = {
+  kpis: {
+    revenue: number;
+    orders: number;
+    customers: number;
+    average_order_value: number;
+  };
+  rfm_summary: {
+    total_customers: number;
+    average_recency: number;
+    average_frequency: number;
+    average_monetary: number;
+  };
+  segments: Record<string, number>;
+};
+
+type Revenue = {
+  Month: string;
+  Revenue: number;
+};
+
+type Segment = {
+  name: string;
+  value: number;
+};
+
+type Customer = {
+  CustomerID: number;
+  Revenue: number;
+};
+
+type Product = {
+  Product: string;
+  Revenue: number;
+};
+
 export default function DashboardPage() {
   const params = useParams();
   const router = useRouter();
-  const [dashboard, setDashboard] = useState<any>(null);
-  const [revenue, setRevenue] = useState<any[]>([]);
-  const [segments, setSegments] = useState<any[]>([]);
-  const [customers, setCustomers] = useState<any[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
+
+  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
+  const [revenue, setRevenue] = useState<Revenue[]>([]);
+  const [segments, setSegments] = useState<Segment[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [insights, setInsights] = useState<string[]>([]);
-  const [prediction, setPrediction] = useState<any>(null);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    const loadData = async () => {
+      const [
+        dashboardRes,
+        revenueRes,
+        segmentRes,
+        customerRes,
+        productRes,
+        insightsRes,
+        predictionRes,
+      ] = await Promise.all([
+        api.get(`/dashboard/${params.id}`),
+        api.get(`/revenue/${params.id}`),
+        api.get(`/segments/${params.id}`),
+        api.get(`/customers/top/${params.id}`),
+        api.get(`/products/top/${params.id}`),
+        api.get(`/insights/${params.id}`),
+        api.get(`/predict/${params.id}`),
+      ]);
 
-  async function loadData() {
-    const [
-      dashboardRes,
-      revenueRes,
-      segmentRes,
-      customerRes,
-      productRes,
-      insightsRes,
-      predictionRes,
-    ] = await Promise.all([
-      api.get(`/dashboard/${params.id}`),
-      api.get(`/revenue/${params.id}`),
-      api.get(`/segments/${params.id}`),
-      api.get(`/customers/top/${params.id}`),
-      api.get(`/products/top/${params.id}`),
-      api.get(`/insights/${params.id}`),
-      api.get(`/predict/${params.id}`),
-    ]);
+      setDashboard(dashboardRes.data);
+      setRevenue(revenueRes.data);
 
-    setDashboard(dashboardRes.data);
-    setRevenue(revenueRes.data);
-    setSegments(
-      Object.entries(segmentRes.data.segments).map(([name, value]) => ({
-        name,
-        value,
-      })),
-    );
-    setCustomers(customerRes.data);
-    setProducts(productRes.data);
-    setInsights(insightsRes.data.insights);
-    setPrediction(predictionRes.data);
-  }
+      setSegments(
+        Object.entries(segmentRes.data.segments).map(([name, value]) => ({
+          name,
+          value: Number(value),
+        })),
+      );
+
+      setCustomers(customerRes.data);
+      setProducts(productRes.data);
+      setInsights(insightsRes.data.insights);
+      setPrediction(predictionRes.data);
+    };
+
+    void loadData();
+  }, [params.id]);
 
   function downloadReport() {
     window.open(`http://localhost:8000/api/report/${params.id}`, "_blank");
@@ -118,8 +170,8 @@ export default function DashboardPage() {
         </div>
 
         <ChurnChart
-          active={prediction.predicted_active}
-          churners={prediction.predicted_churners}
+          active={prediction?.predicted_active ?? 0}
+          churners={prediction?.predicted_churners ?? 0}
         />
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -150,13 +202,15 @@ export default function DashboardPage() {
               </thead>
 
               <tbody>
-                {prediction.high_risk_customers?.map((customer: any) => (
-                  <tr key={customer.customer_id} className="border-b">
-                    <td className="py-2">{customer.customer_id}</td>
+                {prediction.high_risk_customers?.map(
+                  (customer: HighRiskCustomer) => (
+                    <tr key={customer.customer_id} className="border-b">
+                      <td className="py-2">{customer.customer_id}</td>
 
-                    <td className="py-2">{customer.churn_probability}%</td>
-                  </tr>
-                ))}
+                      <td className="py-2">{customer.churn_probability}%</td>
+                    </tr>
+                  ),
+                )}
               </tbody>
             </table>
           </div>
