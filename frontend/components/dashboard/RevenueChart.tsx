@@ -10,7 +10,12 @@ import {
   Tooltip,
 } from "recharts";
 
-export default function RevenueChart({ data }: { data: any[] }) {
+type Revenue = {
+  Month: string;
+  Revenue: number;
+};
+
+export default function RevenueChart({ data }: { data: Revenue[] }) {
   return (
     <div
       className="

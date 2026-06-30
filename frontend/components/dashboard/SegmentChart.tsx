@@ -11,7 +11,12 @@ import {
 
 const COLORS = ["#2563eb", "#16a34a", "#f59e0b", "#dc2626", "#7c3aed"];
 
-export default function SegmentChart({ data }: { data: any[] }) {
+type Segment = {
+  name: string;
+  value: number;
+};
+
+export default function SegmentChart({ data }: { data: Segment[] }) {
   return (
     <div
       className="
