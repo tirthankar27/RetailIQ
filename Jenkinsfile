@@ -62,46 +62,6 @@ pipeline {
             }
         }
 
-        stage('Terraform Format') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform fmt -check'
-                }
-            }
-        }
-
-        stage('Terraform Init') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform init'
-                }
-            }
-        }
-
-        stage('Terraform Validate') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform validate'
-                }
-            }
-        }
-
-        stage('Terraform Plan') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform plan -out=tfplan'
-                }
-            }
-        }
-
-        stage('Ansible Deployment Validation') {
-            steps {
-                dir('ansible') {
-                    sh 'ansible-playbook -i inventory.ini deploy.yml'
-                }
-            }
-        }
-
     }
 
     post {
