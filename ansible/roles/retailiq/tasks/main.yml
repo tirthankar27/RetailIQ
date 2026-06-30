@@ -1,34 +1,34 @@
 ---
-- name: Verify backend directory
-  stat:
-    path: /workspace/backend
-  register: backend_dir
+- name: Wait for Backend API
+  uri:
+    url: http://localhost:8000/docs
+    status_code: 200
+  register: backend_api
+  retries: 20
+  delay: 3
+  until: backend_api.status == 200
 
-- name: Verify frontend directory
-  stat:
-    path: /workspace/frontend
-  register: frontend_dir
+- name: Wait for Frontend
+  uri:
+    url: http://localhost:3000
+    status_code: 200
+  register: frontend_app
+  retries: 20
+  delay: 3
+  until: frontend_app.status == 200
 
-- name: Verify terraform directory
-  stat:
-    path: /workspace/terraform
-  register: terraform_dir
-
-- name: Verify monitoring directory
-  stat:
-    path: /workspace/monitoring
-  register: monitoring_dir
-
-- name: Show deployment summary
+- name: Show Deployment Summary
   debug:
     msg:
       - "=========================================="
-      - "RetailIQ Deployment Validation Complete"
+      - "RetailIQ Deployment Successful"
       - ""
-      - "Backend Folder    : {{ backend_dir.stat.exists }}"
-      - "Frontend Folder   : {{ frontend_dir.stat.exists }}"
-      - "Terraform Folder  : {{ terraform_dir.stat.exists }}"
-      - "Monitoring Folder : {{ monitoring_dir.stat.exists }}"
+      - "Frontend   : http://localhost:3000"
+      - "Backend    : http://localhost:8000"
+      - "Backend API Docs : http://localhost:8000/docs"
+      - "Prometheus : http://localhost:9090"
+      - "Grafana    : http://localhost:3001"
       - ""
-      - "Application validation successful."
+      - "Docker containers are running."
+      - "Application is reachable."
       - "=========================================="

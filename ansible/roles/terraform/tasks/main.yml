@@ -1,0 +1,10 @@
+---
+- name: Terraform Init
+  command: terraform init
+  args:
+    chdir: "{{ playbook_dir }}/../terraform"
+
+- name: Terraform Apply
+  command: terraform apply -auto-approve
+  args:
+    chdir: "{{ playbook_dir }}/../terraform"
