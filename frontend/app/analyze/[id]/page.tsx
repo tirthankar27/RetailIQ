@@ -30,10 +30,6 @@ export default function AnalyzePage() {
     product_column: "",
   });
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
   const fetchData = useCallback(async () => {
     try {
       const response = await api.get(`/analyze/${params.id}`);
@@ -64,6 +60,10 @@ export default function AnalyzePage() {
       alert("Failed to save mapping");
     }
   }
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   if (!data) {
     return (
