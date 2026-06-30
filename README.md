@@ -1,5 +1,3 @@
-![CI](https://github.com/tirthankar27/RetailIQ/actions/workflows/ci.yml/badge.svg)
-
 # RetailIQ – AI-Powered Customer Intelligence Platform
 
 RetailIQ is a production-inspired full-stack retail analytics platform that transforms raw retail transaction data into actionable business intelligence. It combines customer analytics, machine learning, cloud-native deployment, infrastructure automation, monitoring, and reporting into a single end-to-end application.
@@ -10,45 +8,45 @@ RetailIQ is a production-inspired full-stack retail analytics platform that tran
 
 ## Business Analytics
 
-* KPI Dashboard (Revenue, Orders, Customers, AOV)
-* Revenue Trend Analysis
-* Top Customers & Products
-* Interactive Data Visualizations
-* AI-Generated Business Insights
+- KPI Dashboard (Revenue, Orders, Customers, AOV)
+- Revenue Trend Analysis
+- Top Customers & Products
+- Interactive Data Visualizations
+- AI-Generated Business Insights
 
 ## Customer Intelligence
 
-* RFM Customer Segmentation
-* Logistic Regression Churn Prediction
-* Churn Probability & Risk Scoring
-* High-Risk Customer Identification
+- RFM Customer Segmentation
+- Logistic Regression Churn Prediction
+- Churn Probability & Risk Scoring
+- High-Risk Customer Identification
 
 ## Data Processing
 
-* CSV & Excel Upload
-* Dynamic Column Mapping
-* Automated Data Validation
-* Data Standardization Pipeline
+- CSV & Excel Upload
+- Dynamic Column Mapping
+- Automated Data Validation
+- Data Standardization Pipeline
 
 ## Reporting
 
-* Executive PDF Report
-* Revenue Trend Charts
-* KPI Summary
-* Customer & Product Analytics
-* Top 10 At-Risk Customers
-* Churn Analysis
+- Executive PDF Report
+- Revenue Trend Charts
+- KPI Summary
+- Customer & Product Analytics
+- Top 10 At-Risk Customers
+- Churn Analysis
 
 ## DevOps & Infrastructure
 
-* Docker Containerization
-* Kubernetes Orchestration
-* Terraform Infrastructure Provisioning
-* Ansible Deployment Automation
-* GitHub Actions CI Pipeline
-* Redis Caching
-* Prometheus Monitoring
-* Grafana Dashboards
+- Docker Containerization
+- Kubernetes Orchestration
+- Terraform Infrastructure Provisioning
+- Ansible Deployment Automation
+- Jenkins Continuous Integration
+- Redis Caching
+- Prometheus Monitoring
+- Grafana Dashboards
 
 ---
 
@@ -58,10 +56,10 @@ RetailIQ is a production-inspired full-stack retail analytics platform that tran
                            GitHub
                               │
                               ▼
-                     GitHub Actions (CI)
+                        Jenkins (CI)
                               │
                               ▼
-                      Docker Images Build
+                     Code Verification
                               │
                ┌──────────────┴──────────────┐
                ▼                             ▼
@@ -95,39 +93,39 @@ RetailIQ is a production-inspired full-stack retail analytics platform that tran
 
 ## Frontend
 
-* Next.js
-* React
-* TypeScript
-* Tailwind CSS
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
 
 ## Backend
 
-* FastAPI
-* SQLAlchemy
-* Pandas
-* Scikit-learn
+- FastAPI
+- SQLAlchemy
+- Pandas
+- Scikit-learn
 
 ## Database
 
-* PostgreSQL
-* Redis
+- PostgreSQL
+- Redis
 
 ## Machine Learning
 
-* Logistic Regression
-* RFM Analysis
-* Feature Engineering
-* Churn Prediction
+- Logistic Regression
+- RFM Analysis
+- Feature Engineering
+- Churn Prediction
 
 ## DevOps
 
-* Docker
-* Kubernetes
-* Terraform
-* Ansible
-* GitHub Actions
-* Prometheus
-* Grafana
+- Docker
+- Kubernetes
+- Terraform
+- Ansible
+- Jenkins
+- Prometheus
+- Grafana
 
 ---
 
@@ -171,9 +169,35 @@ RetailIQ is a production-inspired full-stack retail analytics platform that tran
 
 ---
 
-# Deployment Workflow
+# CI/CD Pipeline
 
-RetailIQ follows a production-inspired deployment pipeline.
+RetailIQ follows a production-inspired CI/CD workflow.
+
+### Continuous Integration (Jenkins)
+
+Jenkins automatically validates every code change by performing:
+
+- Environment verification
+- Backend dependency installation
+- Backend syntax validation
+- Frontend dependency installation
+- ESLint checks
+- Production build verification
+
+### Continuous Deployment (Ansible)
+
+After successful CI validation, Ansible automates deployment by:
+
+- Environment validation
+- Terraform infrastructure provisioning
+- Docker Compose deployment
+- Kubernetes deployment
+- Rollout verification
+- Service health checks
+
+---
+
+# Deployment Workflow
 
 ```text
 Developer
@@ -182,40 +206,24 @@ Developer
 Git Push
     │
     ▼
-GitHub Actions
+Jenkins (CI)
     │
     ▼
-Docker Image Build
-    │
-    ▼
-Terraform
-(Network & Volumes)
+Code Verification
     │
     ▼
 Ansible Playbook
     │
-    ▼
-Docker Compose
-    │
-    ▼
-Kubernetes Deployment
-    │
-    ▼
-Health Checks
+    ├── Environment Checks
+    ├── Terraform Infrastructure
+    ├── Docker Compose Deployment
+    ├── Kubernetes Deployment
+    ├── Rollout Verification
+    └── Health Checks
     │
     ▼
 Application Available
 ```
-
-The Ansible playbook automates:
-
-* Environment validation
-* Terraform infrastructure provisioning
-* Docker Compose deployment
-* Minikube startup
-* Kubernetes deployment
-* Rollout verification
-* Service health checks
 
 ---
 
@@ -228,21 +236,44 @@ git clone https://github.com/tirthankar27/RetailIQ.git
 cd RetailIQ
 ```
 
-Deploy the complete stack:
+Provision infrastructure:
 
 ```bash
-cd ansible
+cd terraform
+
+terraform init
+terraform apply
+```
+
+Deploy the complete application:
+
+```bash
+cd ../ansible
 
 ansible-playbook -i inventory.ini playbook.yml
+```
+
+Run the Jenkins server:
+
+```bash
+docker compose up -d jenkins
+```
+
+Open Jenkins:
+
+```text
+http://localhost:8080
 ```
 
 Application URLs:
 
 ```text
-Frontend   : http://localhost:3000
-Backend    : http://localhost:8000
-Prometheus : http://localhost:9090
-Grafana    : http://localhost:3001
+Frontend    : http://localhost:3000
+Backend     : http://localhost:8000
+API Docs    : http://localhost:8000/docs
+Prometheus  : http://localhost:9090
+Grafana     : http://localhost:3001
+Jenkins     : http://localhost:8080
 ```
 
 Stop the application:
@@ -259,18 +290,18 @@ minikube stop
 
 Prometheus collects:
 
-* API Request Count
-* Request Latency
-* Dashboard Requests
-* Report Downloads
-* Dataset Uploads
+- API Request Count
+- Request Latency
+- Dashboard Requests
+- Report Downloads
+- Dataset Uploads
 
 Grafana visualizes:
 
-* Request Traffic
-* API Performance
-* Business KPIs
-* Application Health
+- Request Traffic
+- API Performance
+- Business KPIs
+- Application Health
 
 ---
 
@@ -289,21 +320,47 @@ Grafana visualizes:
 
 # Project Highlights
 
-* 12+ FastAPI REST APIs
-* 541K+ Retail Transactions Processed
-* 4.3K+ Customers Analyzed
-* 70% Churn Prediction Accuracy
-* Automated Deployment using Terraform & Ansible
-* Kubernetes-Orchestrated Microservices
-* Infrastructure as Code
-* CI Pipeline with GitHub Actions
-* Monitoring using Prometheus & Grafana
+- 12+ FastAPI REST APIs
+- 541K+ Retail Transactions Processed
+- 4.3K+ Customers Analyzed
+- 70% Churn Prediction Accuracy
+- Automated Infrastructure using Terraform
+- Automated Deployment using Ansible
+- Kubernetes-Orchestrated Microservices
+- Infrastructure as Code (IaC)
+- Continuous Integration using Jenkins
+- Monitoring using Prometheus & Grafana
+
+---
+
+# Project Structure
+
+```text
+RetailIQ
+│
+├── backend/
+├── frontend/
+├── ansible/
+│   ├── inventory.ini
+│   ├── playbook.yml
+│   └── roles/
+├── terraform/
+├── jenkins/
+├── k8s/
+├── monitoring/
+├── docker-compose.yml
+├── Jenkinsfile
+└── README.md
+```
 
 ---
 
 # Author
 
 **Tirthankar Ghosh**
+
+B.Tech Computer Science & Engineering  
+National Institute of Technology Sikkim
 
 ---
 
