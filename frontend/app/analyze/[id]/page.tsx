@@ -56,7 +56,7 @@ export default function AnalyzePage() {
 
   useEffect(() => {
     void fetchData();
-  }, []);
+  }, [fetchData]);
 
   async function saveMapping() {
     try {
