@@ -17,7 +17,7 @@ pipeline {
         stage('Deploy RetailIQ') {
             steps {
                 dir('ansible') {
-                    sh 'ansible-playbook -i inventory.ini playbook.yml'
+                    sh 'ansible-playbook -i inventory.ini deploy.yml'
                 }
             }
         }

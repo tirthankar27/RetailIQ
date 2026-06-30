@@ -1,0 +1,8 @@
+---
+- name: Deploy RetailIQ
+  hosts: localhost
+  connection: local
+
+  roles:
+    - docker
+    - kubernetes
