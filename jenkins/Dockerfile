@@ -14,6 +14,10 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     lsb-release
 
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs
+
 # ---------------- Docker CLI ----------------
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | \
 gpg --dearmor -o /usr/share/keyrings/docker.gpg
