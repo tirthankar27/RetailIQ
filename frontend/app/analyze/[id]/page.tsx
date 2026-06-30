@@ -30,30 +30,32 @@ export default function AnalyzePage() {
     product_column: "",
   });
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await api.get(`/analyze/${params.id}`);
+  async function fetchData() {
+    try {
+      const response = await api.get(`/analyze/${params.id}`);
 
-        setData(response.data);
+      setData(response.data);
 
-        const suggested = response.data.suggested_mapping;
+      const suggested = response.data.suggested_mapping;
 
-        setMapping({
-          customer_column: suggested.customer || "",
+      setMapping({
+        customer_column: suggested.customer || "",
 
-          date_column: suggested.date || "",
+        date_column: suggested.date || "",
 
-          quantity_column: suggested.quantity || "",
+        quantity_column: suggested.quantity || "",
 
-          price_column: suggested.price || "",
+        price_column: suggested.price || "",
 
-          product_column: suggested.product || "",
-        });
-      } catch (error) {
-        console.error(error);
-      }
+        product_column: suggested.product || "",
+      });
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  useEffect(() => {
+    void fetchData();
   }, []);
 
   async function saveMapping() {
@@ -261,26 +263,24 @@ export default function AnalyzePage() {
                 </thead>
 
                 <tbody>
-                  {data.preview.map(
-                    (row: Record<string, unknown>, index: number) => (
-                      <tr key={index} className="hover:bg-slate-50">
-                        {data.columns.map((column: string) => (
-                          <td
-                            key={column}
-                            className="
+                  {data.preview.map((row: Record<string, unknown>, index: number) => (
+                    <tr key={index} className="hover:bg-slate-50">
+                      {data.columns.map((column: string) => (
+                        <td
+                          key={column}
+                          className="
                                 border-b
                                 px-4
                                 py-3
                                 text-sm
                                 text-slate-700
                               "
-                          >
-                            {String(row[column])}
-                          </td>
-                        ))}
-                      </tr>
-                    ),
-                  )}
+                        >
+                          {String(row[column])}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
