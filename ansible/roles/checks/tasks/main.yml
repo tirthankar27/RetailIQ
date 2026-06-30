@@ -1,4 +1,28 @@
 ---
+- name: Check Python
+  command: python3 --version
+  register: python_version
+  changed_when: false
+
+- debug:
+    var: python_version.stdout_lines
+
+- name: Check Node
+  command: node --version
+  register: node_version
+  changed_when: false
+
+- debug:
+    var: node_version.stdout_lines
+
+- name: Check npm
+  command: npm --version
+  register: npm_version
+  changed_when: false
+
+- debug:
+    var: npm_version.stdout_lines
+
 - name: Check Terraform
   command: terraform version
   register: terraform_version
@@ -7,7 +31,7 @@
 - debug:
     var: terraform_version.stdout_lines
 
-- name: Check Docker
+- name: Check Docker CLI
   command: docker --version
   register: docker_version
   changed_when: false
@@ -31,28 +55,10 @@
 - debug:
     var: kubectl_version.stdout_lines
 
-- name: Check Minikube Status
-  command: minikube status
-  register: minikube_status
+- name: Check Ansible
+  command: ansible --version
+  register: ansible_version
   changed_when: false
-  failed_when: false
-
-- name: Show Minikube Status
-  debug:
-    var: minikube_status.stdout_lines
-
-- name: Start Minikube if stopped
-  command: minikube start
-  when: minikube_status.rc != 0
-
-- name: Verify Minikube is Running
-  command: kubectl cluster-info
-  register: cluster_info
-  changed_when: false
-
-- name: Show Cluster Info
-  debug:
-    var: cluster_info.stdout_lines
 
 - debug:
-    var: minikube_status.stdout_lines
+    var: ansible_version.stdout_lines

@@ -4,10 +4,18 @@ pipeline {
 
     stages {
 
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Verify Environment') {
             steps {
                 sh 'pwd'
-                sh 'docker --version'
+                sh 'python3 --version'
+                sh 'node --version'
+                sh 'npm --version'
                 sh 'terraform --version'
                 sh 'ansible --version'
                 sh 'kubectl version --client'
@@ -54,9 +62,43 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Terraform Format') {
             steps {
-                sh 'docker compose build'
+                dir('terraform') {
+                    sh 'terraform fmt -check'
+                }
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform validate'
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform plan -out=tfplan'
+                }
+            }
+        }
+
+        stage('Ansible Deployment Validation') {
+            steps {
+                dir('ansible') {
+                    sh 'ansible-playbook -i inventory.ini deploy.yml'
+                }
             }
         }
 
