@@ -59,6 +59,7 @@ services:
 
     volumes:
       - ./backend:/app
+      - backend_uploads:/app/uploads
     
     networks:
       - retailiq-network
@@ -126,6 +127,9 @@ services:
       - retailiq-network
 
 volumes:
+  backend_uploads:
+    external: true
+    name: retailiq-backend-upload-data
   postgres_data:
     external: true
     name: retailiq-postgres-data

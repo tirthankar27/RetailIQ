@@ -9,6 +9,7 @@ import os
 import shutil
 from app.models.upload import Upload
 from sqlalchemy.orm import Session
+from uuid import uuid4
 from pathlib import Path
 from app.database.dependencies import get_db
 from app.services.metrics import (UPLOADS)
@@ -37,8 +38,13 @@ async def upload_csv(
         exist_ok=True
     )
 
-    file_path = (
-        f"uploads/{file.filename}"
+    unique_filename = (
+        f"{uuid4()}{extension}"
+    )
+
+    file_path = os.path.join(
+        "uploads",
+        unique_filename
     )
 
     with open(
