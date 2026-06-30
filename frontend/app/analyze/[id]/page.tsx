@@ -62,8 +62,8 @@ export default function AnalyzePage() {
   }
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    void fetchData();
+  }, []);
 
   if (!data) {
     return (
