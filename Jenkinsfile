@@ -4,12 +4,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Verify Environment') {
             steps {
                 sh 'pwd'
@@ -17,6 +11,14 @@ pipeline {
                 sh 'terraform --version'
                 sh 'ansible --version'
                 sh 'kubectl version --client'
+            }
+        }
+
+        stage('Deploy RetailIQ') {
+            steps {
+                dir('ansible') {
+                    sh 'ansible-playbook -i inventory.ini playbook.yml'
+                }
             }
         }
 
