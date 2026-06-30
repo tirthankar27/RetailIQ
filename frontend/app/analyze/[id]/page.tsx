@@ -30,33 +30,29 @@ export default function AnalyzePage() {
     product_column: "",
   });
 
-  async function fetchData() {
-    try {
-      const response = await api.get(`/analyze/${params.id}`);
-
-      setData(response.data);
-
-      const suggested = response.data.suggested_mapping;
-
-      setMapping({
-        customer_column: suggested.customer || "",
-
-        date_column: suggested.date || "",
-
-        quantity_column: suggested.quantity || "",
-
-        price_column: suggested.price || "",
-
-        product_column: suggested.product || "",
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get(`/analyze/${params.id}`);
+
+        setData(response.data);
+
+        const suggested = response.data.suggested_mapping;
+
+        setMapping({
+          customer_column: suggested.customer || "",
+          date_column: suggested.date || "",
+          quantity_column: suggested.quantity || "",
+          price_column: suggested.price || "",
+          product_column: suggested.product || "",
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     void fetchData();
-  }, [fetchData]);
+  }, [params.id]);
 
   async function saveMapping() {
     try {
