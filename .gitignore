@@ -4,6 +4,7 @@
 *.py[cod]
 *.pyo
 *.pyd
+*.egg-info/
 
 # Virtual Environment
 
@@ -79,3 +80,14 @@ coverage/
 *.log
 *.tmp
 *.swp
+
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/crash.log
+terraform/*.tfvars
+terraform/*.tfvars.json

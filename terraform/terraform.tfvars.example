@@ -1,0 +1,9 @@
+project_name        = "retailiq"
+
+location            = "Central India"
+
+vm_size             = "Standard_B2s"
+
+admin_username      = "azureuser"
+
+ssh_public_key_path = "~/.ssh/id_rsa.pub"

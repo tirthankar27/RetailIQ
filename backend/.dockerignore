@@ -1,6 +1,11 @@
-venv
-__pycache__
-*.pyc
-uploads
-reports
 .git
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+.env
+uploads/
+reports/
