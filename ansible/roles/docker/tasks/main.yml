@@ -1,5 +1,7 @@
 ---
 - name: Install required packages
+  tags:
+    - setup
   apt:
     name:
       - curl
@@ -9,24 +11,32 @@
     update_cache: yes
 
 - name: Enable Docker
+  tags:
+    - setup
   service:
     name: docker
     state: started
     enabled: yes
   
 - name: Add azureuser to docker group
+  tags:
+    - setup
   user:
     name: azureuser
     groups: docker
     append: yes
 
 - name: Reset SSH connection
+  tags:
+    - setup
   meta: reset_connection
 
 # -----------------------------
 # Install kubectl
 # -----------------------------
 - name: Install kubectl
+  tags:
+    - setup
   shell: |
     curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
@@ -38,6 +48,8 @@
 # Install Minikube
 # -----------------------------
 - name: Install Minikube
+  tags:
+    - setup
   shell: |
     curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
     install minikube-linux-amd64 /usr/local/bin/minikube
@@ -49,6 +61,8 @@
 # Start Minikube
 # -----------------------------
 - name: Start Minikube
+  tags:
+    - setup
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -64,6 +78,8 @@
 # Clone Repository
 # -----------------------------
 - name: Clone RetailIQ repository
+  tags:
+    - setup
   git:
     repo: "{{ repo_url }}"
     dest: "{{ project_dir }}"
@@ -75,6 +91,8 @@
 # Build Backend Image
 # -----------------------------
 - name: Build Backend Image
+  tags:
+    - build
   become: true
   become_user: azureuser
   command: docker build --pull -t retailiq-backend ./backend
@@ -85,6 +103,8 @@
 # Build Frontend Image
 # -----------------------------
 - name: Build Frontend Image
+  tags:
+    - build
   become: true
   become_user: azureuser
   command: docker build --pull -t retailiq-frontend ./frontend
@@ -95,12 +115,16 @@
 # Load Images into Minikube
 # -----------------------------
 - name: Load Backend Image
+  tags:
+    - build
   become: true
   become_user: azureuser
   become_flags: "-i"
   command: minikube image load retailiq-backend
 
 - name: Load Frontend Image
+  tags:
+    - build
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -110,6 +134,8 @@
 # Show Docker Images
 # -----------------------------
 - name: Show Docker Images
+  tags:
+    - build
   become: true
   become_user: azureuser
   become_flags: "-i"

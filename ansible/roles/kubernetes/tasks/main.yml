@@ -1,5 +1,7 @@
 ---
 - name: Set kubectl context
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -10,6 +12,8 @@
 # ConfigMaps
 # -----------------------------
 - name: Apply ConfigMap
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -21,6 +25,8 @@
 # Secrets
 # -----------------------------
 - name: Apply Secret
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -29,6 +35,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Nginx Config
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -37,6 +45,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Nginx
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -45,6 +55,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Nginx Service
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -56,6 +68,8 @@
 # Persistent Volumes
 # -----------------------------
 - name: Apply PostgreSQL PVC
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -67,6 +81,8 @@
 # Database
 # -----------------------------
 - name: Deploy PostgreSQL
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -75,6 +91,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy PostgreSQL Service
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -86,6 +104,8 @@
 # Redis
 # -----------------------------
 - name: Deploy Redis
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -94,6 +114,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Redis Service
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -105,6 +127,8 @@
 # Backend
 # -----------------------------
 - name: Deploy Backend
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -113,6 +137,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Backend Service
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -124,6 +150,8 @@
 # Frontend
 # -----------------------------
 - name: Deploy Frontend
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -132,6 +160,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Frontend Service
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -143,6 +173,8 @@
 # Prometheus
 # -----------------------------
 - name: Deploy Prometheus Config
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -151,6 +183,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Prometheus
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -159,6 +193,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Prometheus Service
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -170,6 +206,8 @@
 # Grafana
 # -----------------------------
 - name: Deploy Grafana
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -178,6 +216,8 @@
     chdir: "{{ project_dir }}"
 
 - name: Deploy Grafana Service
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -189,6 +229,8 @@
 # Wait for Rollout
 # -----------------------------
 - name: Wait for Backend
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -200,6 +242,8 @@
     var: backend_rollout.stdout_lines
 
 - name: Wait for Frontend
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -211,6 +255,8 @@
     var: frontend_rollout.stdout_lines
 
 - name: Wait for PostgreSQL
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -222,6 +268,8 @@
     var: postgres_rollout.stdout_lines
 
 - name: Wait for Redis
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -233,6 +281,8 @@
     var: redis_rollout.stdout_lines
 
 - name: Wait for Prometheus
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -244,6 +294,8 @@
     var: prometheus_rollout.stdout_lines
 
 - name: Wait for Grafana
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -258,6 +310,8 @@
 # Show Cluster Status
 # -----------------------------
 - name: Show Pods
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"
@@ -269,6 +323,8 @@
     var: pods.stdout_lines
 
 - name: Show Services
+  tags:
+  - deploy
   become: true
   become_user: azureuser
   become_flags: "-i"

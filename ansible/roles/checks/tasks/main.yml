@@ -1,5 +1,7 @@
 ---
 - name: Check Docker
+  tags:
+  - checks
   command: docker --version
   register: docker_version
   changed_when: false
@@ -8,6 +10,8 @@
     var: docker_version.stdout_lines
 
 - name: Check kubectl
+  tags:
+  - checks
   command: kubectl version --client
   register: kubectl_version
   changed_when: false
@@ -16,6 +20,8 @@
     var: kubectl_version.stdout_lines
 
 - name: Check Minikube
+  tags:
+  - checks
   command: minikube version
   register: minikube_version
   changed_when: false
@@ -24,6 +30,8 @@
     var: minikube_version.stdout_lines
 
 - name: Check Git
+  tags:
+  - checks
   command: git --version
   register: git_version
   changed_when: false
