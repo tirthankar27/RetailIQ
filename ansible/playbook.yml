@@ -5,7 +5,7 @@
   gather_facts: true
 
   roles:
-    - checks
     - docker
     - kubernetes
     - retailiq
+    - checks
