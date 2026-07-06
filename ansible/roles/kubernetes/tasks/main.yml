@@ -13,7 +13,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/configmap.yml
+  command: kubectl apply -f k8s/configmap.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -24,7 +24,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/secret.yml
+  command: kubectl apply -f k8s/secret.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -32,7 +32,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/nginx-configmap.yml
+  command: kubectl apply -f k8s/nginx-configmap.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -40,7 +40,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/nginx-deployment.yml
+  command: kubectl apply -f k8s/nginx-deployment.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -48,7 +48,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/nginx-service.yml
+  command: kubectl apply -f k8s/nginx-service.yaml
   args:
     chdir: "{{ project_dir }}"
     
@@ -59,7 +59,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/postgres-pvc.yml
+  command: kubectl apply -f k8s/postgres-pvc.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -70,7 +70,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/postgres-deployment.yml
+  command: kubectl apply -f k8s/postgres-deployment.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -78,7 +78,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/postgres-service.yml
+  command: kubectl apply -f k8s/postgres-service.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -89,7 +89,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/redis-deployment.yml
+  command: kubectl apply -f k8s/redis-deployment.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -97,7 +97,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/redis-service.yml
+  command: kubectl apply -f k8s/redis-service.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -108,12 +108,15 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/backend-deployment.yml
+  command: kubectl apply -f k8s/backend-deployment.yaml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Backend Service
-  command: kubectl apply -f k8s/backend-service.yml
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
+  command: kubectl apply -f k8s/backend-service.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -124,7 +127,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/frontend-deployment.yml
+  command: kubectl apply -f k8s/frontend-deployment.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -132,7 +135,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/frontend-service.yml
+  command: kubectl apply -f k8s/frontend-service.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -143,7 +146,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/prometheus-configmap.yml
+  command: kubectl apply -f k8s/prometheus-configmap.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -151,7 +154,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/prometheus-deployment.yml
+  command: kubectl apply -f k8s/prometheus-deployment.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -159,7 +162,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/prometheus-service.yml
+  command: kubectl apply -f k8s/prometheus-service.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -170,7 +173,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/grafana-deployment.yml
+  command: kubectl apply -f k8s/grafana-deployment.yaml
   args:
     chdir: "{{ project_dir }}"
 
@@ -178,7 +181,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl apply -f k8s/grafana-service.yml
+  command: kubectl apply -f k8s/grafana-service.yaml
   args:
     chdir: "{{ project_dir }}"
 
