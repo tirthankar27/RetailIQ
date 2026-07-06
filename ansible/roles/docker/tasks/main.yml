@@ -80,6 +80,9 @@
 - name: Clone RetailIQ repository
   tags:
     - setup
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   git:
     repo: "{{ repo_url }}"
     dest: "{{ project_dir }}"
