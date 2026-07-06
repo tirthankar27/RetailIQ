@@ -45,34 +45,55 @@
     creates: /usr/local/bin/kubectl
 
 # -----------------------------
-# Install Minikube
+# Install k3s
 # -----------------------------
-- name: Install Minikube
+- name: Install k3s
   tags:
     - setup
   shell: |
-    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-    install minikube-linux-amd64 /usr/local/bin/minikube
-    rm minikube-linux-amd64
+    curl -sfL https://get.k3s.io | sh -
   args:
-    creates: /usr/local/bin/minikube
+    creates: /usr/local/bin/k3s
 
 # -----------------------------
-# Start Minikube
+# Configure kubectl
 # -----------------------------
-- name: Start Minikube
+- name: Create kube directory
   tags:
     - setup
-  become: true
-  become_user: azureuser
-  become_flags: "-i"
-  command: >
-    minikube start
-    --driver=docker
-    --cpus=2
-    --memory=2200mb
-  args:
-    creates: /home/azureuser/.minikube
+  file:
+    path: /home/azureuser/.kube
+    state: directory
+    owner: azureuser
+    group: azureuser
+    mode: '0755'
+
+- name: Copy k3s kubeconfig
+  tags:
+    - setup
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: /home/azureuser/.kube/config
+    remote_src: yes
+    owner: azureuser
+    group: azureuser
+    mode: '0600'
+
+- name: Replace localhost in kubeconfig
+  tags:
+    - setup
+  replace:
+    path: /home/azureuser/.kube/config
+    regexp: '127\.0\.0\.1'
+    replace: '127.0.0.1'
+
+- name: Configure KUBECONFIG
+  tags:
+    - setup
+  lineinfile:
+    path: /home/azureuser/.bashrc
+    line: 'export KUBECONFIG=$HOME/.kube/config'
+    create: yes
 
 # -----------------------------
 # Clone Repository
@@ -118,15 +139,31 @@
     chdir: "{{ project_dir }}"
 
 # -----------------------------
-# Load Images into Minikube
+# Load Images into K3s
 # -----------------------------
+- name: Export backend image
+  tags:
+    - build
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
+  command: docker save retailiq-backend -o /tmp/backend.tar
+
 - name: Load Backend Image
   tags:
     - build
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: minikube image load retailiq-backend
+  command: k3s ctr images import /tmp/backend.tar
+
+- name: Export frontend image
+  tags:
+    - build
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
+  command: docker save retailiq-frontend -o /tmp/frontend.tar
 
 - name: Load Frontend Image
   tags:
@@ -134,7 +171,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: minikube image load retailiq-frontend
+  command: k3s ctr images import /tmp/frontend.tar
 
 # -----------------------------
 # Show Docker Images
