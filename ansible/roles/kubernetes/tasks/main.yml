@@ -192,7 +192,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl rollout status deployment/backend
+  command: kubectl rollout status deployment/backend --timeout=600s
   register: backend_rollout
   changed_when: false
 
@@ -203,7 +203,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl rollout status deployment/frontend
+  command: kubectl rollout status deployment/frontend --timeout=600s
   register: frontend_rollout
   changed_when: false
 
@@ -214,7 +214,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl rollout status deployment/postgres
+  command: kubectl rollout status deployment/postgres --timeout=600s
   register: postgres_rollout
   changed_when: false
 
@@ -225,7 +225,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl rollout status deployment/redis
+  command: kubectl rollout status deployment/redis --timeout=600s
   register: redis_rollout
   changed_when: false
 
@@ -236,7 +236,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl rollout status deployment/prometheus
+  command: kubectl rollout status deployment/prometheus --timeout=600s
   register: prometheus_rollout
   changed_when: false
 
@@ -247,7 +247,7 @@
   become: true
   become_user: azureuser
   become_flags: "-i"
-  command: kubectl rollout status deployment/grafana
+  command: kubectl rollout status deployment/grafana --timeout=600s
   register: grafana_rollout
   changed_when: false
 
