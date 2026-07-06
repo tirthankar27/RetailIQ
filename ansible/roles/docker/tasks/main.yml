@@ -1,21 +1,105 @@
 ---
-- name: Build and Start Docker Services
-  command: docker compose up -d --build
+- name: Install required packages
+  apt:
+    name:
+      - curl
+      - git
+      - docker.io
+    state: present
+    update_cache: yes
+
+- name: Enable Docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  
+- name: Add azureuser to docker group
+  user:
+    name: azureuser
+    groups: docker
+    append: yes
+
+- name: Reset SSH connection
+  meta: reset_connection
+
+# -----------------------------
+# Install kubectl
+# -----------------------------
+- name: Install kubectl
+  shell: |
+    curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl
   args:
-    chdir: "{{ playbook_dir }}/.."
+    creates: /usr/local/bin/kubectl
 
-- name: Wait for Backend Container
-  command: docker ps --filter "name=retailiq-backend" --format "{{'{{'}}.Names{{'}}'}}"
-  register: backend_container
-  retries: 10
-  delay: 3
-  until: backend_container.stdout != ""
-  changed_when: false
+# -----------------------------
+# Install Minikube
+# -----------------------------
+- name: Install Minikube
+  shell: |
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    install minikube-linux-amd64 /usr/local/bin/minikube
+    rm minikube-linux-amd64
+  args:
+    creates: /usr/local/bin/minikube
 
-- name: Show Running Containers
-  command: docker ps
-  register: docker_ps
+# -----------------------------
+# Start Minikube
+# -----------------------------
+- name: Start Minikube
+  command: >
+    minikube start
+    --driver=docker
+    --cpus=2
+    --memory=2200mb
+  args:
+    creates: /root/.minikube
+
+# -----------------------------
+# Clone Repository
+# -----------------------------
+- name: Clone RetailIQ repository
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ project_dir }}"
+    version: "{{ repo_branch }}"
+    force: yes
+    update: yes
+
+# -----------------------------
+# Build Backend Image
+# -----------------------------
+- name: Build Backend Image
+  command: docker build --pull -t retailiq-backend ./backend
+  args:
+    chdir: "{{ project_dir }}"
+
+# -----------------------------
+# Build Frontend Image
+# -----------------------------
+- name: Build Frontend Image
+  command: docker build --pull -t retailiq-frontend ./frontend
+  args:
+    chdir: "{{ project_dir }}"
+
+# -----------------------------
+# Load Images into Minikube
+# -----------------------------
+- name: Load Backend Image
+  command: minikube image load retailiq-backend
+
+- name: Load Frontend Image
+  command: minikube image load retailiq-frontend
+
+# -----------------------------
+# Show Docker Images
+# -----------------------------
+- name: Show Docker Images
+  command: docker images
+  register: docker_images
   changed_when: false
 
 - debug:
-    var: docker_ps.stdout_lines
+    var: docker_images.stdout_lines

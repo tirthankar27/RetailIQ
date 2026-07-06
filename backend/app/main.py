@@ -17,6 +17,8 @@ from app.api.product import router as product_router
 from app.api.insights import router as insights_router
 from app.api.report import router as report_router
 from app.api.predict import router as predict_router
+import os
+from dotenv import load_dotenv
 
 app = FastAPI(
     title="Customer Intelligence Platform"
@@ -41,11 +43,10 @@ async def metrics_middleware(
 
     return response
 
+origins = os.getenv("CORS_ORIGINS").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000"
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

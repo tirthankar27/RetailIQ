@@ -5,6 +5,8 @@ metadata:
   name: backend-service
 
 spec:
+  type: ClusterIP
+  
   selector:
     app: backend
 

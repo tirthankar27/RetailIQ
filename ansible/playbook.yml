@@ -1,12 +1,11 @@
 ---
 - name: Deploy RetailIQ
-  hosts: localhost
-  connection: local
+  hosts: azure
+  become: true
   gather_facts: true
 
   roles:
     - checks
-    - terraform
     - docker
     - kubernetes
     - retailiq

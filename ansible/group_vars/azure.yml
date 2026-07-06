@@ -1,0 +1,4 @@
+repo_url: "https://github.com/tirthankar27/RetailIQ.git"
+repo_branch: "azure-deployment"
+project_dir: "/opt/retailiq"
+database_url: "postgresql://postgres:postgres@postgres:5432/retailiq"

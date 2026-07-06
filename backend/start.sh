@@ -2,9 +2,12 @@
 
 echo "Waiting for PostgreSQL..."
 
-until pg_isready -h postgres -p 5432 -U postgres
+until pg_isready \
+    -h "$POSTGRES_HOST" \
+    -p "$POSTGRES_PORT" \
+    -U postgres
 do
-    echo "PostgreSQL is unavailable - sleeping..."
+    echo "PostgreSQL is unavailable..."
     sleep 2
 done
 
@@ -21,4 +24,6 @@ fi
 
 echo "Starting FastAPI..."
 
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+exec uvicorn app.main:app \
+    --host "$BACKEND_HOST" \
+    --port "$BACKEND_PORT"

@@ -34,8 +34,64 @@ spec:
                   name: retailiq-secret
                   key: DATABASE_URL
 
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: retailiq-config
+                  key: POSTGRES_HOST
+
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: retailiq-config
+                  key: POSTGRES_PORT
+
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
                   name: retailiq-config
                   key: REDIS_HOST
+
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: retailiq-config
+                  key: REDIS_PORT
+
+            - name: BACKEND_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: retailiq-config
+                  key: BACKEND_HOST
+
+            - name: BACKEND_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: retailiq-config
+                  key: BACKEND_PORT
+
+            - name: CORS_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: retailiq-config
+                  key: CORS_ORIGINS
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8000
+            failureThreshold: 30
+            periodSeconds: 5
+                    
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 10
