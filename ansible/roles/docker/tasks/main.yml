@@ -49,13 +49,16 @@
 # Start Minikube
 # -----------------------------
 - name: Start Minikube
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: >
     minikube start
     --driver=docker
     --cpus=2
     --memory=2200mb
   args:
-    creates: /root/.minikube
+    creates: /home/azureuser/.minikube
 
 # -----------------------------
 # Clone Repository
@@ -72,6 +75,8 @@
 # Build Backend Image
 # -----------------------------
 - name: Build Backend Image
+  become: true
+  become_user: azureuser
   command: docker build --pull -t retailiq-backend ./backend
   args:
     chdir: "{{ project_dir }}"
@@ -80,6 +85,8 @@
 # Build Frontend Image
 # -----------------------------
 - name: Build Frontend Image
+  become: true
+  become_user: azureuser
   command: docker build --pull -t retailiq-frontend ./frontend
   args:
     chdir: "{{ project_dir }}"
@@ -88,15 +95,24 @@
 # Load Images into Minikube
 # -----------------------------
 - name: Load Backend Image
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: minikube image load retailiq-backend
 
 - name: Load Frontend Image
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: minikube image load retailiq-frontend
 
 # -----------------------------
 # Show Docker Images
 # -----------------------------
 - name: Show Docker Images
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: docker images
   register: docker_images
   changed_when: false

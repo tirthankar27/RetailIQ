@@ -1,5 +1,8 @@
 ---
 - name: Set kubectl context
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl config use-context minikube
   changed_when: false
   
@@ -7,6 +10,9 @@
 # ConfigMaps
 # -----------------------------
 - name: Apply ConfigMap
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/configmap.yml
   args:
     chdir: "{{ project_dir }}"
@@ -15,21 +21,33 @@
 # Secrets
 # -----------------------------
 - name: Apply Secret
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/secret.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Nginx Config
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/nginx-configmap.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Nginx
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/nginx-deployment.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Nginx Service
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/nginx-service.yml
   args:
     chdir: "{{ project_dir }}"
@@ -38,6 +56,9 @@
 # Persistent Volumes
 # -----------------------------
 - name: Apply PostgreSQL PVC
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/postgres-pvc.yml
   args:
     chdir: "{{ project_dir }}"
@@ -46,11 +67,17 @@
 # Database
 # -----------------------------
 - name: Deploy PostgreSQL
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/postgres-deployment.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy PostgreSQL Service
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/postgres-service.yml
   args:
     chdir: "{{ project_dir }}"
@@ -59,11 +86,17 @@
 # Redis
 # -----------------------------
 - name: Deploy Redis
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/redis-deployment.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Redis Service
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/redis-service.yml
   args:
     chdir: "{{ project_dir }}"
@@ -72,6 +105,9 @@
 # Backend
 # -----------------------------
 - name: Deploy Backend
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/backend-deployment.yml
   args:
     chdir: "{{ project_dir }}"
@@ -85,11 +121,17 @@
 # Frontend
 # -----------------------------
 - name: Deploy Frontend
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/frontend-deployment.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Frontend Service
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/frontend-service.yml
   args:
     chdir: "{{ project_dir }}"
@@ -98,16 +140,25 @@
 # Prometheus
 # -----------------------------
 - name: Deploy Prometheus Config
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/prometheus-configmap.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Prometheus
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/prometheus-deployment.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Prometheus Service
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/prometheus-service.yml
   args:
     chdir: "{{ project_dir }}"
@@ -116,11 +167,17 @@
 # Grafana
 # -----------------------------
 - name: Deploy Grafana
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/grafana-deployment.yml
   args:
     chdir: "{{ project_dir }}"
 
 - name: Deploy Grafana Service
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl apply -f k8s/grafana-service.yml
   args:
     chdir: "{{ project_dir }}"
@@ -129,6 +186,9 @@
 # Wait for Rollout
 # -----------------------------
 - name: Wait for Backend
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl rollout status deployment/backend
   register: backend_rollout
   changed_when: false
@@ -137,6 +197,9 @@
     var: backend_rollout.stdout_lines
 
 - name: Wait for Frontend
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl rollout status deployment/frontend
   register: frontend_rollout
   changed_when: false
@@ -145,6 +208,9 @@
     var: frontend_rollout.stdout_lines
 
 - name: Wait for PostgreSQL
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl rollout status deployment/postgres
   register: postgres_rollout
   changed_when: false
@@ -153,6 +219,9 @@
     var: postgres_rollout.stdout_lines
 
 - name: Wait for Redis
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl rollout status deployment/redis
   register: redis_rollout
   changed_when: false
@@ -161,6 +230,9 @@
     var: redis_rollout.stdout_lines
 
 - name: Wait for Prometheus
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl rollout status deployment/prometheus
   register: prometheus_rollout
   changed_when: false
@@ -169,6 +241,9 @@
     var: prometheus_rollout.stdout_lines
 
 - name: Wait for Grafana
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl rollout status deployment/grafana
   register: grafana_rollout
   changed_when: false
@@ -180,6 +255,9 @@
 # Show Cluster Status
 # -----------------------------
 - name: Show Pods
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl get pods -o wide
   register: pods
   changed_when: false
@@ -188,6 +266,9 @@
     var: pods.stdout_lines
 
 - name: Show Services
+  become: true
+  become_user: azureuser
+  become_flags: "-i"
   command: kubectl get svc
   register: services
   changed_when: false
