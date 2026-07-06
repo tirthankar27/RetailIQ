@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: NodePort
+  name: nginx-service
 
 spec:
-  type: LoadBalancer
+  type: NodePort
 
   selector:
     app: nginx
