@@ -110,7 +110,10 @@
     - build
   become: true
   become_user: azureuser
-  command: docker build --pull -t retailiq-frontend ./frontend
+  command: >
+    docker build
+    --build-arg NEXT_PUBLIC_API_URL=/api
+    -t retailiq-frontend .
   args:
     chdir: "{{ project_dir }}"
 
