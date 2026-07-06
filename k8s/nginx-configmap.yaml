@@ -18,14 +18,6 @@ data:
         server frontend-service:3000;
       }
 
-      upstream grafana {
-        server grafana-service:3000;
-      }
-
-      upstream prometheus {
-        server prometheus-service:9090;
-      }
-
       server {
 
         listen 80;
@@ -44,14 +36,6 @@ data:
 
         location /docs {
           proxy_pass http://backend/docs;
-        }
-
-        location /grafana/ {
-          proxy_pass http://grafana/;
-        }
-
-        location /prometheus/ {
-          proxy_pass http://prometheus/;
         }
       }
     }
