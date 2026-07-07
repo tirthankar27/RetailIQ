@@ -16,7 +16,6 @@ pipeline {
                 sh 'python3 --version'
                 sh 'node --version'
                 sh 'npm --version'
-                sh 'terraform --version'
                 sh 'ansible --version'
                 sh 'kubectl version --client'
             }
