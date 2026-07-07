@@ -116,9 +116,6 @@
 - name: Clone RetailIQ repository
   tags:
     - setup
-  become: true
-  become_user: azureuser
-  become_flags: "-i"
   git:
     repo: "{{ repo_url }}"
     dest: "{{ project_dir }}"
@@ -133,7 +130,6 @@
   tags:
     - build
   become: true
-  become_user: azureuser
   command: docker build --pull -t retailiq-backend ./backend
   args:
     chdir: "{{ project_dir }}"
@@ -145,7 +141,6 @@
   tags:
     - build
   become: true
-  become_user: azureuser
   command: >
     docker build
     --build-arg NEXT_PUBLIC_API_URL=/api
@@ -162,7 +157,6 @@
   tags:
     - build
   become: true
-  become_user: azureuser
   become_flags: "-i"
   command: docker save retailiq-backend -o /tmp/backend.tar
 
@@ -176,7 +170,6 @@
   tags:
     - build
   become: true
-  become_user: azureuser
   become_flags: "-i"
   command: docker save retailiq-frontend -o /tmp/frontend.tar
 
@@ -190,7 +183,6 @@
   tags:
     - build
   become: true
-  become_user: azureuser
   file:
     path: /tmp/backend.tar
     state: absent
@@ -199,7 +191,6 @@
   tags:
     - build
   become: true
-  become_user: azureuser
   file:
     path: /tmp/frontend.tar
     state: absent
@@ -208,7 +199,6 @@
   tags:
     - deploy
   become: true
-  become_user: azureuser
   command: kubectl apply -f k8s/
   args:
     chdir: "{{ project_dir }}"
@@ -217,26 +207,22 @@
   tags:
     - deploy
   become: true
-  become_user: azureuser
   command: kubectl rollout restart deployment/backend
 
 - name: Restart frontend
   tags:
     - deploy
   become: true
-  become_user: azureuser
   command: kubectl rollout restart deployment/frontend
 
 - name: Wait for backend
   tags:
     - deploy
   become: true
-  become_user: azureuser
   command: kubectl rollout status deployment/backend
 
 - name: Wait for frontend
   tags:
     - deploy
   become: true
-  become_user: azureuser
   command: kubectl rollout status deployment/frontend
