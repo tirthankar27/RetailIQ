@@ -170,8 +170,6 @@
   tags:
     - build
   become: true
-  become_user: azureuser
-  become_flags: "-i"
   command: k3s ctr images import /tmp/backend.tar
 
 - name: Export frontend image
@@ -186,8 +184,6 @@
   tags:
     - build
   become: true
-  become_user: azureuser
-  become_flags: "-i"
   command: k3s ctr images import /tmp/frontend.tar
 
 - name: Remove backend tar
