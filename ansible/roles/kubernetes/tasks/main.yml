@@ -1,13 +1,4 @@
 ---
-- name: Set kubectl context
-  tags:
-  - deploy
-  become: true
-  become_user: azureuser
-  become_flags: "-i"
-  command: kubectl config use-context minikube
-  changed_when: false
-  
 # -----------------------------
 # ConfigMaps
 # -----------------------------

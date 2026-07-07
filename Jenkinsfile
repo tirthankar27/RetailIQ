@@ -22,14 +22,6 @@ pipeline {
             }
         }
 
-        stage('Backend Dependencies') {
-            steps {
-                dir('backend') {
-                    sh 'python3 -m pip install --break-system-packages -r requirements.txt'
-                }
-            }
-        }
-
         stage('Backend Syntax Check') {
             steps {
                 dir('backend') {
@@ -57,7 +49,26 @@ pipeline {
         stage('Frontend Production Build') {
             steps {
                 dir('frontend') {
-                    sh 'npm run build'
+                    withEnv(["NEXT_PUBLIC_API_URL=/api"]) {
+                        sh 'npm run build'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy RetailIQ') {
+            steps {
+                dir('ansible') {
+                    sh '''
+                    echo "Starting deployment..."
+
+                    ansible-playbook \
+                        -i inventory.ini \
+                        playbook.yml \
+                        --tags build,deploy
+
+                    echo "Deployment completed."
+                    '''
                 }
             }
         }
