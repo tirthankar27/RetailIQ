@@ -47,13 +47,28 @@
 # -----------------------------
 # Install k3s
 # -----------------------------
+- name: Check if k3s exists
+  tags:
+    - setup
+  stat:
+    path: /usr/local/bin/k3s
+  register: k3s_binary
+
 - name: Install k3s
   tags:
     - setup
-  shell: |
-    curl -sfL https://get.k3s.io | sh -
-  args:
-    creates: /usr/local/bin/k3s
+  shell: curl -sfL https://get.k3s.io | sh -
+  when: not k3s_binary.stat.exists
+
+- name: Wait for k3s
+  tags:
+    - setup
+  command: kubectl get nodes
+  register: node_status
+  retries: 15
+  delay: 5
+  until: node_status.rc == 0
+  changed_when: false
 
 # -----------------------------
 # Configure kubectl
@@ -134,7 +149,9 @@
   command: >
     docker build
     --build-arg NEXT_PUBLIC_API_URL=/api
-    -t retailiq-frontend .
+    -t retailiq-frontend
+    -f frontend/Dockerfile
+    frontend
   args:
     chdir: "{{ project_dir }}"
 
@@ -173,18 +190,57 @@
   become_flags: "-i"
   command: k3s ctr images import /tmp/frontend.tar
 
-# -----------------------------
-# Show Docker Images
-# -----------------------------
-- name: Show Docker Images
+- name: Remove backend tar
   tags:
     - build
   become: true
   become_user: azureuser
-  become_flags: "-i"
-  command: docker images
-  register: docker_images
-  changed_when: false
+  file:
+    path: /tmp/backend.tar
+    state: absent
 
-- debug:
-    var: docker_images.stdout_lines
+- name: Remove frontend tar
+  tags:
+    - build
+  become: true
+  become_user: azureuser
+  file:
+    path: /tmp/frontend.tar
+    state: absent
+
+- name: Apply Kubernetes manifests
+  tags:
+    - deploy
+  become: true
+  become_user: azureuser
+  command: kubectl apply -f k8s/
+  args:
+    chdir: "{{ project_dir }}"
+
+- name: Restart backend
+  tags:
+    - deploy
+  become: true
+  become_user: azureuser
+  command: kubectl rollout restart deployment/backend
+
+- name: Restart frontend
+  tags:
+    - deploy
+  become: true
+  become_user: azureuser
+  command: kubectl rollout restart deployment/frontend
+
+- name: Wait for backend
+  tags:
+    - deploy
+  become: true
+  become_user: azureuser
+  command: kubectl rollout status deployment/backend
+
+- name: Wait for frontend
+  tags:
+    - deploy
+  become: true
+  become_user: azureuser
+  command: kubectl rollout status deployment/frontend
