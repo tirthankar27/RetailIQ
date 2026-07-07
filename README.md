@@ -1,6 +1,6 @@
 # RetailIQ – AI-Powered Customer Intelligence Platform
 
-RetailIQ is a production-inspired full-stack retail analytics platform that transforms raw retail transaction data into actionable business intelligence. It combines customer analytics, machine learning, cloud-native deployment, infrastructure automation, monitoring, and reporting into a single end-to-end application.
+RetailIQ is a cloud-native retail analytics platform that transforms raw retail transaction data into actionable business intelligence. It combines customer analytics, machine learning, cloud-native deployment, infrastructure automation, monitoring, and reporting into a single end-to-end application.
 
 ---
 
@@ -53,38 +53,38 @@ RetailIQ is a production-inspired full-stack retail analytics platform that tran
 # Architecture
 
 ```text
-                           GitHub
+                            GitHub
                               │
                               ▼
-                        Jenkins (CI)
+                    Jenkins Pipeline (CI/CD)
                               │
                               ▼
-                     Code Verification
-                              │
-               ┌──────────────┴──────────────┐
-               ▼                             ▼
-          Terraform                    Ansible
-   (Network & Volumes)         (Deployment Automation)
-               │                             │
-               └──────────────┬──────────────┘
-                              ▼
-                       Docker Compose
+                    Source Code Checkout
                               │
                               ▼
-                         Minikube Cluster
+                     Build Verification
+            (Python, Node.js, ESLint, Next.js Build)
                               │
                               ▼
-                        Kubernetes Pods
+                    Ansible Deployment
                               │
-     ┌───────────────┬────────┴─────────┬──────────────┐
-     ▼               ▼                  ▼              ▼
-  Next.js        FastAPI             PostgreSQL      Redis
-                      │
-                      ▼
-           Prometheus (/metrics)
-                      │
-                      ▼
-                 Grafana Dashboard
+         ┌────────────────────┴───────────────────┐
+         ▼                                        ▼
+   Docker Image Build                  Kubernetes Deployment
+         │                                        │
+         └────────────────────┬───────────────────┘
+                              ▼
+                      Azure VM (K3s Cluster)
+                              │
+      ┌──────────────┬─────────┴─────────┬──────────────┐
+      ▼              ▼                   ▼              ▼
+   Next.js       FastAPI            PostgreSQL        Redis
+                              │
+                              ▼
+                       Prometheus Metrics
+                              │
+                              ▼
+                       Grafana Dashboards
 ```
 
 ---
@@ -171,31 +171,32 @@ RetailIQ is a production-inspired full-stack retail analytics platform that tran
 
 # CI/CD Pipeline
 
-RetailIQ follows a production-inspired CI/CD workflow.
+RetailIQ implements an automated CI/CD pipeline using Jenkins and Ansible.
 
-### Continuous Integration (Jenkins)
+## Continuous Integration
 
-Jenkins automatically validates every code change by performing:
+Every build performs:
 
+- Source code checkout
 - Environment verification
-- Backend dependency installation
-- Backend syntax validation
+- Python validation
+- Backend syntax checks
 - Frontend dependency installation
-- ESLint checks
+- ESLint validation
 - Production build verification
 
-### Continuous Deployment (Ansible)
+## Continuous Deployment
 
-After successful CI validation, Ansible automates deployment by:
+After successful validation, Jenkins automatically triggers Ansible to:
 
-- Environment validation
-- Terraform infrastructure provisioning
-- Docker Compose deployment
-- Kubernetes deployment
-- Rollout verification
-- Service health checks
+- Build Docker images
+- Import images into the K3s container runtime
+- Apply Kubernetes manifests
+- Perform rolling updates
+- Verify deployment rollout
+- Perform application health checks
 
----
+This provides a fully automated build-and-deploy workflow.
 
 # Deployment Workflow
 
@@ -206,28 +207,34 @@ Developer
 Git Push
     │
     ▼
-Jenkins (CI)
+GitHub Repository
     │
     ▼
-Code Verification
+Jenkins Pipeline
     │
-    ▼
-Ansible Playbook
-    │
-    ├── Environment Checks
-    ├── Terraform Infrastructure
-    ├── Docker Compose Deployment
-    ├── Kubernetes Deployment
-    ├── Rollout Verification
-    └── Health Checks
-    │
-    ▼
-Application Available
+    ├── Checkout
+    ├── Verify Environment
+    ├── Backend Validation
+    ├── Frontend Build
+    └── Deploy
+            │
+            ▼
+      Ansible Playbook
+            │
+            ├── Build Docker Images
+            ├── Load Images into K3s
+            ├── Apply Kubernetes Manifests
+            ├── Restart Deployments
+            ├── Wait for Rollouts
+            └── Verify Cluster Health
+            │
+            ▼
+     Azure VM (K3s Cluster)
 ```
 
 ---
 
-# Local Development
+# Deployment & Setup
 
 Clone the repository:
 
@@ -255,9 +262,17 @@ ansible-playbook -i inventory.ini playbook.yml
 
 Run the Jenkins server:
 
-```bash
-docker compose up -d jenkins
+## Jenkins
+
+Jenkins is configured to execute the CI/CD pipeline using the project's `Jenkinsfile`.
+
+After configuring Jenkins with the repository and credentials:
+
+```text
+Build Now
 ```
+
+automatically executes the entire pipeline.
 
 Open Jenkins:
 
@@ -268,20 +283,11 @@ http://localhost:8080
 Application URLs:
 
 ```text
-Frontend    : http://localhost:3000
-Backend     : http://localhost:8000
-API Docs    : http://localhost:8000/docs
-Prometheus  : http://localhost:9090
-Grafana     : http://localhost:3001
-Jenkins     : http://localhost:8080
-```
-
-Stop the application:
-
-```bash
-docker compose down
-
-minikube stop
+Frontend      : http://<VM-IP>
+Backend API   : http://<VM-IP>/api
+Prometheus    : http://<VM-IP>:9090
+Grafana       : http://<VM-IP>:3001
+Jenkins       : http://<VM-IP>:8080
 ```
 
 ---
@@ -321,15 +327,17 @@ Grafana visualizes:
 # Project Highlights
 
 - 12+ FastAPI REST APIs
+- End-to-End CI/CD Pipeline with Jenkins & Ansible
+- Azure Cloud Deployment using K3s Kubernetes
+- Dockerized Microservices Architecture
+- Infrastructure as Code using Terraform
+- Automated Kubernetes Rollouts
+- Production-style Monitoring with Prometheus & Grafana
 - 541K+ Retail Transactions Processed
 - 4.3K+ Customers Analyzed
-- 70% Churn Prediction Accuracy
-- Automated Infrastructure using Terraform
-- Automated Deployment using Ansible
-- Kubernetes-Orchestrated Microservices
-- Infrastructure as Code (IaC)
-- Continuous Integration using Jenkins
-- Monitoring using Prometheus & Grafana
+- AI-powered Churn Prediction (70% Accuracy)
+- Executive PDF Reporting
+- Customer Segmentation using RFM Analysis
 
 ---
 
@@ -353,6 +361,25 @@ RetailIQ
 └── README.md
 ```
 
+---
+
+# Production Deployment
+
+RetailIQ is deployed on an Azure Virtual Machine using a production-inspired DevOps workflow.
+
+Deployment stack:
+
+- Azure Virtual Machine
+- Docker
+- K3s Kubernetes
+- Jenkins CI/CD
+- Ansible Automation
+- Terraform Infrastructure as Code
+- Prometheus Monitoring
+- Grafana Dashboards
+
+The deployment pipeline automatically builds Docker images, deploys Kubernetes resources, verifies rollouts, and performs application health checks.
+The CI/CD pipeline validates code quality, builds production Docker images, deploys them to a K3s Kubernetes cluster using Ansible, performs rollout verification, and confirms application health before completing the deployment.
 ---
 
 # Author
