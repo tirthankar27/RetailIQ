@@ -114,7 +114,7 @@ export default function DashboardPage() {
   }, [params.id]);
 
   function downloadReport() {
-    window.open(`http://localhost:8000/api/report/${params.id}`, "_blank");
+    window.open(`/api/report/${params.id}`, "_blank");
   }
 
   if (!dashboard) {
