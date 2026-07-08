@@ -73,29 +73,54 @@ export default function DashboardPage() {
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [insights, setInsights] = useState<string[]>([]);
 
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     const [
+  //       dashboardRes,
+  //       revenueRes,
+  //       segmentRes,
+  //       customerRes,
+  //       productRes,
+  //       insightsRes,
+  //       predictionRes,
+  //     ] = await Promise.all([
+  //       api.get(`/dashboard/${params.id}`),
+  //       api.get(`/revenue/${params.id}`),
+  //       api.get(`/segments/${params.id}`),
+  //       api.get(`/customers/top/${params.id}`),
+  //       api.get(`/products/top/${params.id}`),
+  //       api.get(`/insights/${params.id}`),
+  //       api.get(`/predict/${params.id}`),
+  //     ]);
+
+  //     setDashboard(dashboardRes.data);
+  //     setRevenue(revenueRes.data);
+
+  //     setSegments(
+  //       Object.entries(segmentRes.data.segments).map(([name, value]) => ({
+  //         name,
+  //         value: Number(value),
+  //       })),
+  //     );
+
+  //     setCustomers(customerRes.data);
+  //     setProducts(productRes.data);
+  //     setInsights(insightsRes.data.insights);
+  //     setPrediction(predictionRes.data);
+  //   };
+
+  //   void loadData();
+  // }, [params.id]);
+
   useEffect(() => {
     const loadData = async () => {
-      const [
-        dashboardRes,
-        revenueRes,
-        segmentRes,
-        customerRes,
-        productRes,
-        insightsRes,
-        predictionRes,
-      ] = await Promise.all([
-        api.get(`/dashboard/${params.id}`),
-        api.get(`/revenue/${params.id}`),
-        api.get(`/segments/${params.id}`),
-        api.get(`/customers/top/${params.id}`),
-        api.get(`/products/top/${params.id}`),
-        api.get(`/insights/${params.id}`),
-        api.get(`/predict/${params.id}`),
-      ]);
-
+      const dashboardRes = await api.get(`/dashboard/${params.id}`);
       setDashboard(dashboardRes.data);
+
+      const revenueRes = await api.get(`/revenue/${params.id}`);
       setRevenue(revenueRes.data);
 
+      const segmentRes = await api.get(`/segments/${params.id}`);
       setSegments(
         Object.entries(segmentRes.data.segments).map(([name, value]) => ({
           name,
@@ -103,9 +128,16 @@ export default function DashboardPage() {
         })),
       );
 
+      const customerRes = await api.get(`/customers/top/${params.id}`);
       setCustomers(customerRes.data);
+
+      const productRes = await api.get(`/products/top/${params.id}`);
       setProducts(productRes.data);
+
+      const insightsRes = await api.get(`/insights/${params.id}`);
       setInsights(insightsRes.data.insights);
+
+      const predictionRes = await api.get(`/predict/${params.id}`);
       setPrediction(predictionRes.data);
     };
 
