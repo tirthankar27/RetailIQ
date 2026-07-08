@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 
 from fastapi import (
     APIRouter,
@@ -153,6 +154,9 @@ def get_dashboard(upload_id: int, db: Session = Depends(get_db)):
 
     print("STEP 5")
 
+    print(upload.file_path, flush=True)
+    print(os.path.exists(upload.file_path), flush=True)
+    print(os.path.getsize(upload.file_path), flush=True)
     if upload.file_path.endswith(".csv"):
         df = pd.read_csv(upload.file_path)
     else:
