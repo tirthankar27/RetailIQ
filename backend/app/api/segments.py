@@ -1,4 +1,3 @@
-import pandas as pd
 import json
 
 from fastapi import (
@@ -13,6 +12,7 @@ from app.database.dependencies import get_db
 
 from app.models.upload import Upload
 from app.models.column_mapping import ColumnMapping
+from app.services.dataset_loader import (load_standardized_df)
 from app.services.cache import (redis_client, CACHE_TTL)
 
 from app.services.data_processor import (
@@ -71,14 +71,10 @@ def get_segments(upload_id: int, db: Session = Depends(get_db)):
             detail="Mapping not found"
         )
         
-    if upload.file_path.endswith(".csv"):
-        df = pd.read_csv(
-            upload.file_path
-        )
-    else:
-        df = pd.read_excel(upload.file_path)
-
-    df = standardize_dataframe(df, mapping)
+    df = load_standardized_df(
+        upload,
+        mapping
+    )
     rfm = generate_rfm(df)
 
     rfm = generate_segments(rfm)
