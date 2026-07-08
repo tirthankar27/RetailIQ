@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import os
+import time
 
 from fastapi import (
     APIRouter,
@@ -152,17 +153,19 @@ def get_dashboard(upload_id: int, db: Session = Depends(get_db)):
         .first()
     )
 
-    print("STEP 5")
+    print("STEP 5", flush=True)
 
     print(upload.file_path, flush=True)
     print(os.path.exists(upload.file_path), flush=True)
     print(os.path.getsize(upload.file_path), flush=True)
+    t = time.time()
+
     if upload.file_path.endswith(".csv"):
         df = pd.read_csv(upload.file_path)
     else:
         df = pd.read_excel(upload.file_path)
-
-    print("STEP 6")
+    print("READ TIME:", time.time() - t, flush=True)
+    print("STEP 6", flush=True)
 
     df = standardize_dataframe(df, mapping)
 
